@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  minio:
+    image: minio/minio
+    container_name: ezfinanz-storage
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    ports:
+      - "9000:9000"
+      - "9001:9001"

@@ -4,6 +4,20 @@ I am building a **Personal Loan Application System** using **Spring Boot and Rea
 
 The goal of this project is to build a complete online loan application process where a customer can apply for a personal loan and an admin can review, approve, reject, and process the application.
 
+                               EZFINANZ
+
+             ┌─────────┴─────────┐
+             │                                                  |
+         CUSTOMER                             ADMIN
+             │                                                 │
+       Apply for loan                        Review loan
+             │                                                 │
+             └─────────┬─────────┘
+                                       │
+                               Spring Boot
+                                       │
+                                   MySQL
+
 ## Customer Flow
 
 The customer will go through the following steps:

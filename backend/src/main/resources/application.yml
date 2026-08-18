@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: ezfinanz-backend
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ezfinanz}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: 8080
+
+jwt:
+  # Base64 encoded secret key (min 256 bits / 32 bytes). 
+  # This matches a secure signature requirement for HMAC-SHA256.
+  secret: ${JWT_SECRET:dGhlLXF1aWNrLWJyb3duLWZveC1qdW1wcy1vdmVyLXRoZS1sYXp5LWRvZy1hbmQtc29tZS1tb3JlLXJhbmRvbS1jaGFyYWN0ZXJzLXNlY3JldC1rZXk=}
+  expiration: 86400000 # 24 hours in milliseconds
