@@ -115,17 +115,17 @@ export default function KycStep() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-24 space-y-4">
-        <Loader2 className="h-8 w-8 text-indigo-500 animate-spin" />
-        <span className="text-xs text-slate-500">Retrieving application status...</span>
+        <Loader2 className="h-8 w-8 text-brand-blue animate-spin" />
+        <span className="text-xs text-neutral-secondary">Retrieving application status...</span>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-8 py-6">
+    <div className="w-full max-w-2xl mx-auto space-y-8 py-6 text-neutral-text">
       {/* Visual Stepper */}
-      <div className="flex items-center justify-between text-xs text-slate-500 bg-slate-900 border border-slate-800 rounded-full px-6 py-3">
-        <span className="text-white font-bold">1. KYC Details</span>
+      <div className="flex items-center justify-between text-xs text-neutral-secondary bg-brand-light-blue border border-[#E4EAF0] rounded-full px-6 py-3">
+        <span className="text-brand-blue font-bold">1. KYC Details</span>
         <ChevronRightIcon className="h-3 w-3" />
         <span>2. Financials</span>
         <ChevronRightIcon className="h-3 w-3" />
@@ -136,13 +136,13 @@ export default function KycStep() {
         <span>5. Sign Declarations</span>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-xl relative">
-        <h2 className="text-2xl font-bold text-white tracking-tight mb-2">Personal & KYC Details</h2>
-        <p className="text-slate-400 text-xs mb-8">Please enter details exactly as they appear on your government documents.</p>
+      <div className="bg-white border border-[#E4EAF0] p-8 rounded-2xl shadow-lg relative">
+        <h2 className="text-2xl font-bold text-neutral-text tracking-tight mb-2">Personal & KYC Details</h2>
+        <p className="text-neutral-secondary text-xs mb-8">Please enter details exactly as they appear on your government documents.</p>
 
         {error && (
-          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-300 rounded-xl text-xs flex items-start gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
+          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl text-xs flex items-start gap-2">
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-500 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
@@ -150,34 +150,34 @@ export default function KycStep() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Full Name</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Full Name</label>
               <input
                 type="text"
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
                 placeholder="Applicant full name"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Date of Birth</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Date of Birth</label>
               <input
                 type="date"
                 required
                 value={dateOfBirth}
                 onChange={(e) => setDateOfBirth(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Gender</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Gender</label>
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
               >
                 <option value="MALE">Male</option>
                 <option value="FEMALE">Female</option>
@@ -186,11 +186,11 @@ export default function KycStep() {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">ID Document Type</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">ID Document Type</label>
               <select
                 value={idType}
                 onChange={(e) => setIdType(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
               >
                 <option value="AADHAAR">Aadhaar Card</option>
                 <option value="PAN">PAN Card</option>
@@ -199,36 +199,36 @@ export default function KycStep() {
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">ID Document Number</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">ID Document Number</label>
               <input
                 type="text"
                 required
                 value={idNumber}
                 onChange={(e) => setIdNumber(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
                 placeholder="ID credential number"
               />
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Current Address</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Current Address</label>
               <textarea
                 required
                 rows={3}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white resize-none"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200 resize-none"
                 placeholder="Residential coordinates"
               />
             </div>
           </div>
 
-          <hr className="border-slate-880/80" />
+          <hr className="border-[#E4EAF0]" />
 
           {/* Document Upload Area */}
           <div className="space-y-4">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Upload Verification Document (ID Front)</h4>
-            <div className="bg-slate-950/40 border-2 border-dashed border-slate-800 rounded-2xl p-6 text-center hover:border-slate-700 transition relative">
+            <h4 className="text-xs font-bold text-neutral-text uppercase tracking-wider">Upload Verification Document (ID Front)</h4>
+            <div className="bg-neutral-section border-2 border-dashed border-[#E4EAF0] rounded-2xl p-6 text-center hover:border-brand-blue transition relative">
               <input
                 type="file"
                 accept="image/png, image/jpeg"
@@ -239,20 +239,20 @@ export default function KycStep() {
               <div className="space-y-2 flex flex-col items-center">
                 {uploading ? (
                   <>
-                    <Loader2 className="h-8 w-8 text-indigo-500 animate-spin" />
-                    <span className="text-xs text-slate-400">Uploading document image...</span>
+                    <Loader2 className="h-8 w-8 text-brand-blue animate-spin" />
+                    <span className="text-xs text-neutral-secondary">Uploading document image...</span>
                   </>
                 ) : documentUrl ? (
                   <>
-                    <FileCheck className="h-8 w-8 text-emerald-500" />
-                    <span className="text-xs text-emerald-400 font-semibold">Document upload complete!</span>
-                    <span className="text-[10px] text-slate-500 truncate max-w-xs">{documentUrl}</span>
+                    <FileCheck className="h-8 w-8 text-brand-green" />
+                    <span className="text-xs text-brand-green font-semibold">Document upload complete!</span>
+                    <span className="text-[10px] text-neutral-secondary truncate max-w-xs">{documentUrl}</span>
                   </>
                 ) : (
                   <>
-                    <FolderOpen className="h-8 w-8 text-slate-600" />
-                    <span className="text-xs text-slate-400">Click or drag image file here (JPEG/PNG only)</span>
-                    <span className="text-[10px] text-slate-500">Max size 5MB</span>
+                    <FolderOpen className="h-8 w-8 text-neutral-secondary" />
+                    <span className="text-xs text-neutral-secondary">Click or drag image file here (JPEG/PNG only)</span>
+                    <span className="text-[10px] text-neutral-muted">Max size 5MB</span>
                   </>
                 )}
               </div>
@@ -262,7 +262,7 @@ export default function KycStep() {
           <button
             type="submit"
             disabled={submitting || uploading}
-            className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-indigo-600/10 flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+            className="w-full py-3.5 bg-brand-green hover:bg-brand-dark-green text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-brand-green/10 flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
           >
             {submitting ? (
               <Loader2 className="h-4 w-4 animate-spin" />

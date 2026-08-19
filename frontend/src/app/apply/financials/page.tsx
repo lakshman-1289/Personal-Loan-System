@@ -81,19 +81,19 @@ export default function FinancialStep() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-24 space-y-4">
-        <Loader2 className="h-8 w-8 text-indigo-500 animate-spin" />
-        <span className="text-xs text-slate-500">Retrieving application status...</span>
+        <Loader2 className="h-8 w-8 text-brand-blue animate-spin" />
+        <span className="text-xs text-neutral-secondary">Retrieving application status...</span>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-8 py-6">
+    <div className="w-full max-w-2xl mx-auto space-y-8 py-6 text-neutral-text">
       {/* Visual Stepper */}
-      <div className="flex items-center justify-between text-xs text-slate-500 bg-slate-900 border border-slate-800 rounded-full px-6 py-3">
-        <span className="text-slate-400">1. KYC Details</span>
+      <div className="flex items-center justify-between text-xs text-neutral-secondary bg-brand-light-blue border border-[#E4EAF0] rounded-full px-6 py-3">
+        <span className="text-brand-blue">1. KYC Details</span>
         <ChevronRightIcon className="h-3 w-3" />
-        <span className="text-white font-bold">2. Financials</span>
+        <span className="text-brand-blue font-bold">2. Financials</span>
         <ChevronRightIcon className="h-3 w-3" />
         <span>3. Selected Terms</span>
         <ChevronRightIcon className="h-3 w-3" />
@@ -102,13 +102,13 @@ export default function FinancialStep() {
         <span>5. Sign Declarations</span>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-xl">
-        <h2 className="text-2xl font-bold text-white tracking-tight mb-2">Financial Declarations</h2>
-        <p className="text-slate-400 text-xs mb-8">Declare your monthly salaries and credit indicator markers below.</p>
+      <div className="bg-white border border-[#E4EAF0] p-8 rounded-2xl shadow-lg">
+        <h2 className="text-2xl font-bold text-neutral-text tracking-tight mb-2">Financial Declarations</h2>
+        <p className="text-neutral-secondary text-xs mb-8">Declare your monthly salaries and credit indicator markers below.</p>
 
         {error && (
-          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-300 rounded-xl text-xs flex items-start gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
+          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl text-xs flex items-start gap-2">
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-500 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
@@ -116,7 +116,7 @@ export default function FinancialStep() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Monthly Net Income (₹)</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Monthly Net Income (₹)</label>
               <input
                 type="number"
                 required
@@ -124,13 +124,13 @@ export default function FinancialStep() {
                 step="any"
                 value={monthlyIncome}
                 onChange={(e) => setMonthlyIncome(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
                 placeholder="e.g. 50000"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Annual Gross Income (₹)</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Annual Gross Income (₹)</label>
               <input
                 type="number"
                 required
@@ -138,13 +138,13 @@ export default function FinancialStep() {
                 step="any"
                 value={annualIncome}
                 onChange={(e) => setAnnualIncome(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
                 placeholder="e.g. 600000"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Requested Loan Principal (₹)</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Requested Loan Principal (₹)</label>
               <input
                 type="number"
                 required
@@ -152,13 +152,13 @@ export default function FinancialStep() {
                 step="any"
                 value={requestedAmount}
                 onChange={(e) => setRequestedAmount(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
                 placeholder="e.g. 200000"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Self-Declared Credit Score</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Self-Declared Credit Score</label>
               <input
                 type="number"
                 required
@@ -166,13 +166,13 @@ export default function FinancialStep() {
                 max="850"
                 value={creditScore}
                 onChange={(e) => setCreditScore(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
                 placeholder="300 - 850"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Existing Monthly Debts (EMIs) (₹)</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Existing Monthly Debts (EMIs) (₹)</label>
               <input
                 type="number"
                 required
@@ -180,31 +180,31 @@ export default function FinancialStep() {
                 step="any"
                 value={existingDebt}
                 onChange={(e) => setExistingDebt(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
                 placeholder="Existing monthly EMIs"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Employer Name</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Employer Name</label>
               <input
                 type="text"
                 required
                 value={employer}
                 onChange={(e) => setEmployer(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
                 placeholder="Employer Private Ltd"
               />
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Job Designation</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Job Designation</label>
               <input
                 type="text"
                 required
                 value={designation}
                 onChange={(e) => setDesignation(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white"
+                className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
                 placeholder="Software Engineer, Consultant, Manager"
               />
             </div>
@@ -214,7 +214,7 @@ export default function FinancialStep() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-indigo-600/10 flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+              className="w-full py-3.5 bg-brand-green hover:bg-brand-dark-green text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-brand-green/10 flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
             >
               {submitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

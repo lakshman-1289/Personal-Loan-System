@@ -88,21 +88,21 @@ export default function TermsStep() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-24 space-y-4">
-        <Loader2 className="h-8 w-8 text-indigo-500 animate-spin" />
-        <span className="text-xs text-slate-500">Calculating loan amortization models...</span>
+        <Loader2 className="h-8 w-8 text-brand-blue animate-spin" />
+        <span className="text-xs text-neutral-secondary">Calculating loan amortization models...</span>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8 py-6">
+    <div className="w-full max-w-4xl mx-auto space-y-8 py-6 text-neutral-text">
       {/* Visual Stepper */}
-      <div className="flex items-center justify-between text-xs text-slate-500 bg-slate-900 border border-slate-800 rounded-full px-6 py-3">
-        <span className="text-slate-400">1. KYC Details</span>
+      <div className="flex items-center justify-between text-xs text-neutral-secondary bg-brand-light-blue border border-[#E4EAF0] rounded-full px-6 py-3">
+        <span className="text-brand-blue">1. KYC Details</span>
         <ChevronRightIcon className="h-3 w-3" />
-        <span className="text-slate-400">2. Financials</span>
+        <span className="text-brand-blue">2. Financials</span>
         <ChevronRightIcon className="h-3 w-3" />
-        <span className="text-white font-bold">3. Loan Terms Selection</span>
+        <span className="text-brand-blue font-bold">3. Loan Terms Selection</span>
         <ChevronRightIcon className="h-3 w-3" />
         <span>4. Bank details</span>
         <ChevronRightIcon className="h-3 w-3" />
@@ -111,13 +111,13 @@ export default function TermsStep() {
 
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Select Loan Terms</h2>
-          <p className="text-slate-400 text-xs mt-1">Review the reducing balance EMI schedules below and select a tenure option.</p>
+          <h2 className="text-2xl font-bold text-neutral-text tracking-tight">Select Loan Terms</h2>
+          <p className="text-neutral-secondary text-xs mt-1">Review the reducing balance EMI schedules below and select a tenure option.</p>
         </div>
 
         {error && (
-          <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-300 rounded-xl text-xs flex items-start gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
+          <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl text-xs flex items-start gap-2">
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-500 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
@@ -130,49 +130,49 @@ export default function TermsStep() {
               <div
                 key={option.tenureMonths}
                 onClick={() => setSelectedTenure(option.tenureMonths)}
-                className={`bg-slate-900 border rounded-2xl p-6 space-y-5 cursor-pointer transition relative overflow-hidden flex flex-col justify-between ${isSelected ? 'border-indigo-500 shadow-lg shadow-indigo-500/5 bg-slate-900/80' : 'border-slate-850 hover:border-slate-700'}`}
+                className={`bg-white border rounded-2xl p-6 space-y-5 cursor-pointer transition relative overflow-hidden flex flex-col justify-between ${isSelected ? 'border-brand-green bg-brand-light-green/20 shadow-md' : 'border-[#E4EAF0] hover:border-brand-blue'}`}
               >
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-white flex items-center gap-1.5">
-                      <Calendar className="h-4 w-4 text-indigo-400" />
+                    <span className="text-lg font-bold text-neutral-text flex items-center gap-1.5">
+                      <Calendar className="h-4 w-4 text-brand-blue" />
                       {option.tenureMonths} Months
                     </span>
                     {isSelected && (
-                      <span className="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded">
+                      <span className="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 bg-brand-green/15 text-brand-green rounded">
                         Selected
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Estimated EMI</div>
-                  <div className="text-2xl font-extrabold text-white">
+                  <div className="text-[10px] text-neutral-secondary font-semibold uppercase tracking-wider">Estimated EMI</div>
+                  <div className="text-2xl font-extrabold text-neutral-text">
                     ₹{option.emi.toLocaleString('en-IN')}
-                    <span className="text-xs font-normal text-slate-500">/mo</span>
+                    <span className="text-xs font-normal text-neutral-secondary">/mo</span>
                   </div>
                 </div>
 
-                <hr className="border-slate-850" />
+                <hr className="border-[#E4EAF0]" />
 
-                <div className="space-y-2 text-xs text-slate-400">
+                <div className="space-y-2 text-xs text-neutral-secondary">
                   <div className="flex justify-between">
                     <span>Principal:</span>
-                    <span className="text-slate-200">₹{option.principal.toLocaleString('en-IN')}</span>
+                    <span className="text-neutral-text font-medium">₹{option.principal.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Processing Fee (2%):</span>
-                    <span className="text-slate-200">₹{option.processingFee.toLocaleString('en-IN')}</span>
+                    <span className="text-neutral-text font-medium">₹{option.processingFee.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>GST (18%):</span>
-                    <span className="text-slate-200">₹{option.gst.toLocaleString('en-IN')}</span>
+                    <span className="text-neutral-text font-medium">₹{option.gst.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Net Disbursed:</span>
-                    <span className="text-slate-200">₹{option.netDisbursedAmount.toLocaleString('en-IN')}</span>
+                    <span className="text-neutral-text font-medium">₹{option.netDisbursedAmount.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Compounded IRR:</span>
-                    <span className="text-indigo-400 font-semibold font-mono">{option.irr.toFixed(2)}%</span>
+                    <span className="text-brand-blue font-semibold font-mono">{option.irr.toFixed(2)}%</span>
                   </div>
                 </div>
               </div>
@@ -185,7 +185,7 @@ export default function TermsStep() {
           <button
             onClick={handleSelect}
             disabled={submitting || !selectedTenure}
-            className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-indigo-600/10 flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+            className="w-full py-3.5 bg-brand-green hover:bg-brand-dark-green text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-brand-green/10 flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
           >
             {submitting ? (
               <Loader2 className="h-4 w-4 animate-spin" />

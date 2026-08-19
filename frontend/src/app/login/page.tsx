@@ -51,52 +51,52 @@ export default function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto my-12 bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-2xl backdrop-blur-md relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+    <div className="max-w-md mx-auto my-12 bg-white border border-[#E4EAF0] p-8 rounded-2xl shadow-lg relative overflow-hidden text-neutral-text">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-blue to-brand-green"></div>
 
       <div className="mb-8 text-center space-y-2">
-        <h2 className="text-3xl font-extrabold text-white tracking-tight">Welcome Back</h2>
-        <p className="text-slate-400 text-xs">Log in to manage your loan application</p>
+        <h2 className="text-3xl font-extrabold text-neutral-text tracking-tight">Welcome Back</h2>
+        <p className="text-neutral-secondary text-xs">Log in to manage your loan application</p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-300 rounded-xl text-xs flex items-start gap-2">
-          <AlertCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
+        <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl text-xs flex items-start gap-2">
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-500 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Email Address</label>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Email Address</label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200"
+            className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
             placeholder="name@example.com"
           />
-          {fieldErrors.email && <p className="text-rose-400 text-[10px]">{fieldErrors.email}</p>}
+          {fieldErrors.email && <p className="text-rose-500 text-[10px]">{fieldErrors.email}</p>}
         </div>
 
         <div className="space-y-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Password</label>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Password</label>
           <input
             type="password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200"
+            className="w-full bg-white border border-[#E4EAF0] text-neutral-text rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200"
             placeholder="••••••••"
           />
-          {fieldErrors.password && <p className="text-rose-400 text-[10px]">{fieldErrors.password}</p>}
+          {fieldErrors.password && <p className="text-rose-500 text-[10px]">{fieldErrors.password}</p>}
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition duration-200 shadow-lg shadow-indigo-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm cursor-pointer"
+          className="w-full py-3 bg-brand-green hover:bg-brand-dark-green text-white font-semibold rounded-xl transition duration-200 shadow-lg shadow-brand-green/10 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm cursor-pointer"
         >
           {loading ? (
             <>
@@ -115,9 +115,9 @@ export default function Login() {
         </button>
       </form>
 
-      <div className="mt-8 text-center text-xs text-slate-400">
+      <div className="mt-8 text-center text-xs text-neutral-secondary">
         Don't have an account?{' '}
-        <Link href="/register" className="font-semibold text-indigo-400 hover:text-indigo-300 hover:underline transition">
+        <Link href="/register" className="font-semibold text-brand-blue hover:text-brand-dark-blue hover:underline transition">
           Sign Up
         </Link>
       </div>

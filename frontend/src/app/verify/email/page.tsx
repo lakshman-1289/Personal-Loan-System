@@ -57,41 +57,41 @@ export default function VerifyEmail() {
   };
 
   return (
-    <div className="max-w-md mx-auto my-12 bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-2xl backdrop-blur-md relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+    <div className="max-w-md mx-auto my-12 bg-white border border-[#E4EAF0] p-8 rounded-2xl shadow-lg relative overflow-hidden text-neutral-text">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-blue to-brand-green"></div>
 
       <div className="mb-8 text-center space-y-3">
-        <div className="h-12 w-12 bg-indigo-500/10 rounded-full flex items-center justify-center mx-auto text-indigo-400">
+        <div className="h-12 w-12 bg-brand-light-blue rounded-full flex items-center justify-center mx-auto text-brand-blue">
           <Mail className="h-6 w-6" />
         </div>
-        <h2 className="text-3xl font-extrabold text-white tracking-tight">Verify Your Email</h2>
-        <p className="text-slate-400 text-xs leading-relaxed">
+        <h2 className="text-3xl font-extrabold text-neutral-text tracking-tight">Verify Your Email</h2>
+        <p className="text-neutral-secondary text-xs leading-relaxed">
           Please confirm your email address. We need to verify this communication channel before proceeding to the KYC steps.
         </p>
       </div>
 
       {info && (
-        <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 rounded-xl text-xs">
+        <div className="mb-6 p-4 bg-brand-light-green border border-brand-green/20 text-brand-green rounded-xl text-xs font-medium">
           <span>{info}</span>
         </div>
       )}
 
       {error && (
-        <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-300 rounded-xl text-xs flex items-start gap-2">
-          <AlertCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
+        <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl text-xs flex items-start gap-2">
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-500 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       <form onSubmit={handleVerify} className="space-y-6">
         <div className="space-y-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Verification Token / OTP</label>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Verification Token / OTP</label>
           <input
             type="text"
             required
             value={token}
             onChange={(e) => setToken(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200 text-center font-mono tracking-widest text-lg text-white"
+            className="w-full bg-white border border-[#E4EAF0] rounded-xl px-4 py-3 focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition duration-200 text-center font-mono tracking-widest text-lg text-neutral-text"
             placeholder="e.g. 123456"
           />
         </div>
@@ -101,7 +101,7 @@ export default function VerifyEmail() {
             type="button"
             disabled={sending}
             onClick={sendOtp}
-            className="flex-1 py-3 bg-slate-950 hover:bg-slate-900 border border-slate-850 text-slate-300 font-semibold rounded-xl text-xs transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 cursor-pointer"
+            className="flex-1 py-3 bg-white hover:bg-[#F7FAFC] border border-[#E4EAF0] text-neutral-text font-semibold rounded-xl text-xs transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <Send className="h-3.5 w-3.5" />
             <span>{sending ? 'Sending...' : 'Send OTP'}</span>
@@ -110,7 +110,7 @@ export default function VerifyEmail() {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-lg shadow-indigo-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 cursor-pointer"
+            className="flex-1 py-3 bg-brand-green hover:bg-brand-dark-green text-white font-semibold rounded-xl text-xs transition shadow-lg shadow-brand-green/10 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 cursor-pointer"
           >
             {loading ? (
               <svg className="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">

@@ -65,27 +65,24 @@ export default function Home() {
   ];
 
   return (
-    <div className="space-y-20 py-6">
+    <div className="space-y-24 py-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 animate-aurora text-neutral-text">
       {/* 1. Hero Section */}
-      <section className="text-center space-y-6 max-w-4xl mx-auto py-12 relative">
-        <div className="absolute inset-0 bg-indigo-500/5 rounded-full blur-3xl -z-10"></div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/10 text-indigo-300 text-xs font-semibold rounded-full border border-indigo-500/20">
+      <section className="text-center space-y-6 max-w-4xl mx-auto py-16 relative">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-blue/10 text-brand-blue text-xs font-semibold rounded-full border border-brand-blue/20">
           <Sparkles className="h-3 w-3 animate-pulse" />
           <span>100% Digital Personal Loans in India</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
-          Easy Financing. <br />
-          <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-500 bg-clip-text text-transparent">
-            Built Around You.
-          </span>
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
+          <span className="text-brand-blue">Easy Financing</span> <br />
+          <span className="text-brand-green">for Everyone</span>
         </h1>
-        <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+        <p className="text-neutral-secondary text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
           Skip the bank queues. Apply for instant personal loans up to ₹5 Lakhs online with simple KYC verification, transparent reducing-balance interest terms, and flexible EMI repayments.
         </p>
         <div className="flex items-center justify-center pt-4">
           <Link
             href="/register"
-            className="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm rounded-xl transition duration-200 shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 group"
+            className="w-full sm:w-auto px-8 py-3.5 bg-brand-green hover:bg-brand-dark-green text-white font-semibold text-sm rounded-xl transition duration-200 shadow-lg shadow-brand-green/20 flex items-center justify-center gap-2 group cursor-pointer"
           >
             <span>Apply For Loan</span>
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
@@ -94,22 +91,21 @@ export default function Home() {
       </section>
 
       {/* 2. Interactive Calculator Section */}
-      <section className="bg-slate-900/60 border border-slate-900 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 h-40 w-40 bg-indigo-500/5 rounded-full blur-3xl -z-10"></div>
+      <section className="bg-white border border-[#E4EAF0] rounded-3xl p-6 md:p-10 shadow-lg relative overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           {/* Sliders column */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-2xl font-bold text-white tracking-tight">Interactive EMI Calculator</h2>
-              <p className="text-slate-400 text-xs mt-1">Estimate your repayments and interest breaks instantly</p>
+              <h2 className="text-2xl font-bold text-neutral-text tracking-tight">Interactive EMI Calculator</h2>
+              <p className="text-neutral-secondary text-xs mt-1">Estimate your repayments and interest breaks instantly</p>
             </div>
 
             {/* Slider 1: Amount */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Loan Amount</span>
-                <span className="text-lg font-bold text-white">₹{amount.toLocaleString('en-IN')}</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Loan Amount</span>
+                <span className="text-lg font-bold text-brand-blue">₹{amount.toLocaleString('en-IN')}</span>
               </div>
               <input
                 type="range"
@@ -118,9 +114,9 @@ export default function Home() {
                 step="5000"
                 value={amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                className="w-full h-1.5 bg-[#E4EAF0] rounded-lg appearance-none cursor-pointer accent-brand-green"
               />
-              <div className="flex justify-between text-[10px] text-slate-500">
+              <div className="flex justify-between text-[10px] text-neutral-muted">
                 <span>₹10,000</span>
                 <span>₹500,000</span>
               </div>
@@ -129,8 +125,8 @@ export default function Home() {
             {/* Slider 2: Tenure */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Repayment Tenure</span>
-                <span className="text-lg font-bold text-white">{tenure} Months</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-neutral-secondary">Repayment Tenure</span>
+                <span className="text-lg font-bold text-brand-blue">{tenure} Months</span>
               </div>
               <input
                 type="range"
@@ -139,9 +135,9 @@ export default function Home() {
                 step="12"
                 value={tenure}
                 onChange={(e) => setTenure(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                className="w-full h-1.5 bg-[#E4EAF0] rounded-lg appearance-none cursor-pointer accent-brand-green"
               />
-              <div className="flex justify-between text-[10px] text-slate-500">
+              <div className="flex justify-between text-[10px] text-neutral-muted">
                 <span>12 Months</span>
                 <span>24 Months</span>
                 <span>36 Months</span>
@@ -150,54 +146,54 @@ export default function Home() {
 
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-3 gap-4 pt-4">
-              <div className="bg-slate-950/40 p-3 rounded-xl border border-slate-850 text-center">
-                <div className="text-[10px] text-slate-500 uppercase font-semibold">Interest Rate</div>
-                <div className="text-xs font-bold text-slate-200 mt-1 flex items-center justify-center gap-1">
-                  <Percent className="h-3 w-3 text-indigo-400" />
+              <div className="bg-neutral-section p-3 rounded-xl border border-[#E4EAF0] text-center">
+                <div className="text-[10px] text-neutral-secondary uppercase font-semibold">Interest Rate</div>
+                <div className="text-xs font-bold text-brand-blue mt-1 flex items-center justify-center gap-1">
+                  <Percent className="h-3 w-3 text-brand-green" />
                   {interestRate}% p.a.
                 </div>
               </div>
-              <div className="bg-slate-950/40 p-3 rounded-xl border border-slate-850 text-center">
-                <div className="text-[10px] text-slate-500 uppercase font-semibold">Processing Fee (2%)</div>
-                <div className="text-xs font-bold text-slate-200 mt-1">₹{processingFee.toLocaleString('en-IN')}</div>
+              <div className="bg-neutral-section p-3 rounded-xl border border-[#E4EAF0] text-center">
+                <div className="text-[10px] text-neutral-secondary uppercase font-semibold">Processing Fee (2%)</div>
+                <div className="text-xs font-bold text-brand-blue mt-1">₹{processingFee.toLocaleString('en-IN')}</div>
               </div>
-              <div className="bg-slate-950/40 p-3 rounded-xl border border-slate-850 text-center">
-                <div className="text-[10px] text-slate-500 uppercase font-semibold">GST on Fee (18%)</div>
-                <div className="text-xs font-bold text-slate-200 mt-1">₹{gst.toLocaleString('en-IN')}</div>
+              <div className="bg-neutral-section p-3 rounded-xl border border-[#E4EAF0] text-center">
+                <div className="text-[10px] text-neutral-secondary uppercase font-semibold">GST on Fee (18%)</div>
+                <div className="text-xs font-bold text-brand-blue mt-1">₹{gst.toLocaleString('en-IN')}</div>
               </div>
             </div>
           </div>
 
           {/* Results column */}
-          <div className="bg-slate-950/80 border border-slate-855 rounded-2xl p-8 space-y-6">
+          <div className="bg-[#F7FAFC] border border-[#E4EAF0] rounded-2xl p-8 space-y-6">
             <div className="text-center">
-              <div className="text-xs uppercase font-bold tracking-wider text-slate-500">Monthly Installment (EMI)</div>
-              <div className="text-4xl md:text-5xl font-extrabold text-white mt-2">
+              <div className="text-xs uppercase font-bold tracking-wider text-neutral-secondary">Monthly Installment (EMI)</div>
+              <div className="text-4xl md:text-5xl font-extrabold text-neutral-text mt-2">
                 ₹{emi.toLocaleString('en-IN')}
-                <span className="text-xs font-semibold text-slate-500">/mo</span>
+                <span className="text-xs font-semibold text-neutral-secondary">/mo</span>
               </div>
             </div>
 
-            <hr className="border-slate-900" />
+            <hr className="border-[#E4EAF0]" />
 
-            <div className="space-y-3.5 text-xs">
+            <div className="space-y-3.5 text-xs text-neutral-secondary">
               <div className="flex justify-between">
-                <span className="text-slate-400">Net Loan Amount Disbursed</span>
-                <span className="font-semibold text-white">₹{netDisbursed.toLocaleString('en-IN')}</span>
+                <span>Net Loan Amount Disbursed</span>
+                <span className="font-semibold text-neutral-text">₹{netDisbursed.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Total Interest Payable</span>
-                <span className="font-semibold text-white">₹{totalInterest.toLocaleString('en-IN')}</span>
+                <span>Total Interest Payable</span>
+                <span className="font-semibold text-neutral-text">₹{totalInterest.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Total Amount Payable</span>
-                <span className="font-semibold text-indigo-400 font-bold">₹{totalPayable.toLocaleString('en-IN')}</span>
+                <span>Total Amount Payable</span>
+                <span className="text-brand-blue font-bold">₹{totalPayable.toLocaleString('en-IN')}</span>
               </div>
             </div>
 
             <Link
               href="/register"
-              className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center block transition shadow-lg shadow-indigo-600/10 text-sm"
+              className="w-full py-3.5 bg-brand-green hover:bg-brand-dark-green text-white font-semibold rounded-xl text-center block transition shadow-lg shadow-brand-green/10 text-sm cursor-pointer"
             >
               Get Started with This Loan
             </Link>
@@ -208,34 +204,34 @@ export default function Home() {
       {/* 3. Product Benefits */}
       <section className="space-y-12">
         <div className="text-center space-y-2">
-          <h2 className="text-3xl font-bold text-white tracking-tight">Why Choose EZFINANZ?</h2>
-          <p className="text-slate-400 text-sm max-w-md mx-auto">Absolute transparency, security, and digital-first operations.</p>
+          <h2 className="text-3xl font-bold text-neutral-text tracking-tight">Why Choose EZFINANZ?</h2>
+          <p className="text-neutral-secondary text-sm max-w-md mx-auto">Absolute transparency, security, and digital-first operations.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-slate-900/40 border border-slate-900 p-6 rounded-2xl flex items-start gap-4">
-            <CheckCircle2 className="h-6 w-6 text-indigo-500 shrink-0 mt-1" />
+          <div className="bg-white border border-[#E4EAF0] p-6 rounded-2xl flex items-start gap-4 hover:border-brand-blue transition duration-200 shadow-sm">
+            <CheckCircle2 className="h-6 w-6 text-brand-green shrink-0 mt-1" />
             <div>
-              <h4 className="font-semibold text-white text-base">100% Paperless Onboarding</h4>
-              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              <h4 className="font-bold text-neutral-text text-base">100% Paperless Onboarding</h4>
+              <p className="text-xs text-neutral-secondary mt-1 leading-relaxed">
                 No bank visits or paper trails. Submit document photos, check eligibility scores, and upload files completely online.
               </p>
             </div>
           </div>
-          <div className="bg-slate-900/40 border border-slate-900 p-6 rounded-2xl flex items-start gap-4">
-            <TrendingUp className="h-6 w-6 text-indigo-500 shrink-0 mt-1" />
+          <div className="bg-white border border-[#E4EAF0] p-6 rounded-2xl flex items-start gap-4 hover:border-brand-blue transition duration-200 shadow-sm">
+            <TrendingUp className="h-6 w-6 text-brand-green shrink-0 mt-1" />
             <div>
-              <h4 className="font-semibold text-white text-base">Reducing Balance Interest</h4>
-              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              <h4 className="font-bold text-neutral-text text-base">Reducing Balance Interest</h4>
+              <p className="text-xs text-neutral-secondary mt-1 leading-relaxed">
                 Interest is computed only on the outstanding principal balance. We use standardized banking calculations with no surprises.
               </p>
             </div>
           </div>
-          <div className="bg-slate-900/40 border border-slate-900 p-6 rounded-2xl flex items-start gap-4">
-            <Percent className="h-6 w-6 text-indigo-500 shrink-0 mt-1" />
+          <div className="bg-white border border-[#E4EAF0] p-6 rounded-2xl flex items-start gap-4 hover:border-brand-blue transition duration-200 shadow-sm">
+            <Percent className="h-6 w-6 text-brand-green shrink-0 mt-1" />
             <div>
-              <h4 className="font-semibold text-white text-base">Clear Flat Pricing</h4>
-              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              <h4 className="font-bold text-neutral-text text-base">Clear Flat Pricing</h4>
+              <p className="text-xs text-neutral-secondary mt-1 leading-relaxed">
                 We deduct the processing fees and GST directly from the disbursement. You know exactly what reaches your account down to the rupee.
               </p>
             </div>
@@ -245,20 +241,20 @@ export default function Home() {
 
       {/* 4. FAQ Section */}
       <section className="space-y-8 max-w-3xl mx-auto">
-        <h2 className="text-3xl font-bold text-white tracking-tight text-center">Frequently Asked Questions</h2>
+        <h2 className="text-3xl font-bold text-neutral-text tracking-tight text-center">Frequently Asked Questions</h2>
         <div className="space-y-4">
           {faqs.map((faq, i) => (
             <div
               key={i}
-              className="bg-slate-900/40 border border-slate-900 rounded-xl overflow-hidden cursor-pointer transition"
+              className="bg-white border border-[#E4EAF0] rounded-xl overflow-hidden cursor-pointer transition hover:border-[#CBD5E1]"
               onClick={() => toggleFaq(i)}
             >
-              <div className="p-4 flex items-center justify-between text-sm font-semibold text-slate-200">
+              <div className="p-4 flex items-center justify-between text-sm font-semibold text-neutral-text">
                 <span>{faq.q}</span>
-                <ChevronDown className={`h-4 w-4 text-slate-500 transition duration-200 ${openFaq === i ? 'rotate-180 text-white' : ''}`} />
+                <ChevronDown className={`h-4 w-4 text-neutral-secondary transition duration-200 ${openFaq === i ? 'rotate-180 text-brand-blue' : ''}`} />
               </div>
               {openFaq === i && (
-                <div className="px-4 pb-4 text-xs text-slate-500 border-t border-slate-950/40 pt-3 leading-relaxed">
+                <div className="px-4 pb-4 text-xs text-neutral-secondary border-t border-[#E4EAF0] pt-3 leading-relaxed">
                   {faq.a}
                 </div>
               )}

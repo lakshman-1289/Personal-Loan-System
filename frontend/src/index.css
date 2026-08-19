@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #0757A6;
+  --color-brand-dark-blue: #063B73;
+  --color-brand-green: #18B66A;
+  --color-brand-dark-green: #0D8F54;
+  --color-brand-light-blue: #EEF6FF;
+  --color-brand-light-green: #EAF9F1;
+
+  --color-neutral-bg: #FFFFFF;
+  --color-neutral-section: #F7FAFC;
+  --color-neutral-text: #172033;
+  --color-neutral-secondary: #667085;
+  --color-neutral-muted: #98A2B3;
+  --color-neutral-border: #E4EAF0;
+}
+
+@keyframes aurora {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-aurora {
+  background: radial-gradient(circle at 10% 20%, rgba(7, 87, 166, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 90% 80%, rgba(24, 182, 106, 0.05) 0%, transparent 50%),
+              #FFFFFF;
+  background-size: 200% 200%;
+  animation: aurora 15s ease infinite;
+}

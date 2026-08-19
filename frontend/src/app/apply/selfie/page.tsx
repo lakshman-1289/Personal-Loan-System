@@ -157,42 +157,42 @@ export default function SelfieStep() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-24 space-y-4">
-        <Loader2 className="h-8 w-8 text-indigo-500 animate-spin" />
-        <span className="text-xs text-slate-500">Retrieving application status...</span>
+        <Loader2 className="h-8 w-8 text-brand-blue animate-spin" />
+        <span className="text-xs text-neutral-secondary">Retrieving application status...</span>
       </div>
     );
   }
 
   return (
-    <div className="max-w-xl mx-auto space-y-8 py-6">
+    <div className="max-w-xl mx-auto space-y-8 py-6 text-neutral-text">
       {/* Visual Stepper */}
-      <div className="flex items-center justify-between text-xs text-slate-500 bg-slate-900 border border-slate-800 rounded-full px-6 py-3">
-        <span className="text-slate-400">1. KYC Details</span>
+      <div className="flex items-center justify-between text-xs text-neutral-secondary bg-brand-light-blue border border-[#E4EAF0] rounded-full px-6 py-3">
+        <span className="text-brand-blue">1. KYC Details</span>
         <ChevronRightIcon className="h-3 w-3" />
-        <span className="text-slate-400">2. Terms Selected</span>
+        <span className="text-brand-blue">2. Financials</span>
         <ChevronRightIcon className="h-3 w-3" />
-        <span className="text-slate-400">3. Bank coordinates</span>
+        <span className="text-brand-blue">3. Selected Terms</span>
         <ChevronRightIcon className="h-3 w-3" />
-        <span className="text-slate-400">4. Sign Declarations</span>
+        <span className="text-brand-blue">4. Bank details</span>
         <ChevronRightIcon className="h-3 w-3" />
-        <span className="text-white font-bold">5. Selfie Check</span>
+        <span className="text-brand-blue font-bold">5. Selfie Check</span>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-xl space-y-6">
+      <div className="bg-white border border-[#E4EAF0] p-8 rounded-2xl shadow-lg space-y-6">
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Identity Selfie Check</h2>
-          <p className="text-slate-400 text-xs mt-1">Capture a facial portrait photo to complete verification.</p>
+          <h2 className="text-2xl font-bold text-neutral-text tracking-tight">Identity Selfie Check</h2>
+          <p className="text-neutral-secondary text-xs mt-1">Capture a facial portrait photo to complete verification.</p>
         </div>
 
         {error && (
-          <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-300 rounded-xl text-xs flex items-start gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
+          <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl text-xs flex items-start gap-2">
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-500 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Camera Display panel */}
-        <div className="bg-slate-955 rounded-2xl overflow-hidden border border-slate-850 h-[300px] flex items-center justify-center relative">
+        <div className="bg-[#F7FAFC] rounded-2xl overflow-hidden border border-[#E4EAF0] h-[300px] flex items-center justify-center relative">
           {capturedUrl ? (
             <img src={capturedUrl} alt="Captured portrait" className="w-full h-full object-cover" />
           ) : cameraSupported ? (
@@ -205,9 +205,9 @@ export default function SelfieStep() {
             />
           ) : (
             <div className="text-center p-6 space-y-3">
-              <FileImage className="h-10 w-10 text-slate-600 mx-auto" />
-              <h4 className="text-xs font-semibold text-slate-400">Camera Access Denied or Unsupported</h4>
-              <p className="text-[10px] text-slate-500 leading-relaxed max-w-xs">
+              <FileImage className="h-10 w-10 text-neutral-secondary mx-auto" />
+              <h4 className="text-xs font-semibold text-neutral-text">Camera Access Denied or Unsupported</h4>
+              <p className="text-[10px] text-neutral-secondary leading-relaxed max-w-xs">
                 Please grant camera permissions or use the button below to upload a portrait image from your gallery.
               </p>
             </div>
@@ -222,7 +222,7 @@ export default function SelfieStep() {
           {!capturedUrl && cameraSupported && (
             <button
               onClick={capturePhoto}
-              className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl shadow-lg shadow-indigo-600/10 flex items-center gap-1.5 cursor-pointer"
+              className="px-6 py-2.5 bg-brand-green hover:bg-brand-dark-green text-white font-semibold text-xs rounded-xl shadow-lg shadow-brand-green/10 flex items-center gap-1.5 cursor-pointer"
             >
               <Camera className="h-4 w-4" />
               <span>Capture Photo</span>
@@ -232,7 +232,7 @@ export default function SelfieStep() {
           {capturedUrl && (
             <button
               onClick={handleRetake}
-              className="px-6 py-2.5 bg-slate-950 hover:bg-slate-900 border border-slate-850 text-slate-300 font-semibold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
+              className="px-6 py-2.5 bg-white hover:bg-[#F7FAFC] border border-[#E4EAF0] text-neutral-text font-semibold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
               <span>Retake Photo</span>
@@ -250,7 +250,7 @@ export default function SelfieStep() {
           {(!cameraSupported || !capturedUrl) && (
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-6 py-2.5 bg-slate-950 hover:bg-slate-900 border border-slate-850 text-slate-300 font-semibold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
+              className="px-6 py-2.5 bg-white hover:bg-[#F7FAFC] border border-[#E4EAF0] text-neutral-text font-semibold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
             >
               <UploadCloud className="h-4 w-4" />
               <span>Upload Photo</span>
@@ -263,7 +263,7 @@ export default function SelfieStep() {
                 setCameraSupported(true);
                 setTimeout(() => startCamera(), 100);
               }}
-              className="px-6 py-2.5 bg-slate-950 hover:bg-slate-900 border border-slate-850 text-slate-300 font-semibold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
+              className="px-6 py-2.5 bg-white hover:bg-[#F7FAFC] border border-[#E4EAF0] text-neutral-text font-semibold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
             >
               <Camera className="h-4 w-4" />
               <span>Retry Camera</span>
@@ -271,14 +271,14 @@ export default function SelfieStep() {
           )}
         </div>
 
-        <hr className="border-slate-850" />
+        <hr className="border-[#E4EAF0]" />
 
         {/* Stepper Buttons */}
         <div className="flex gap-4">
           <button
             onClick={handleSubmit}
             disabled={submitting || !capturedBlob}
-            className="flex-1 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-indigo-600/10 flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+            className="flex-1 py-3.5 bg-brand-green hover:bg-brand-dark-green text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-brand-green/10 flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
           >
             {submitting ? (
               <Loader2 className="h-4 w-4 animate-spin" />
