@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 // Set up Axios default configurations
@@ -42,17 +42,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
   }, []);
 
-  const login = (data: UserSession) => {
+  const login = useCallback((data: UserSession) => {
     localStorage.setItem('ezfinanz_session', JSON.stringify(data));
     axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
     setSession(data);
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('ezfinanz_session');
     delete axios.defaults.headers.common['Authorization'];
     setSession(null);
-  };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ session, loading, login, logout }}>
