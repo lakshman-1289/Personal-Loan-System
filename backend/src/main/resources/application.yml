@@ -32,3 +32,7 @@ app:
     partial-dti: 45.0
     income-factor: 10
     require-financial-verification: false
+  terms:
+    processing-fee-pct: 2.0
+    gst-pct: 18.0
+    default-annual-interest-rate: 12.0
