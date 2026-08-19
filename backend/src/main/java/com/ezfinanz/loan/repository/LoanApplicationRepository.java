@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface LoanApplicationRepository extends JpaRepository<LoanApplication, Long> {
     List<LoanApplication> findByUser(User user);
     Optional<LoanApplication> findFirstByUserOrderByCreatedAtDesc(User user);
+    org.springframework.data.domain.Page<LoanApplication> findByStatus(com.ezfinanz.common.enums.ApplicationStatus status, org.springframework.data.domain.Pageable pageable);
 }

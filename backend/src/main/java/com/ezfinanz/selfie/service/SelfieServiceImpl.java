@@ -85,16 +85,9 @@ public class SelfieServiceImpl implements SelfieService {
 
         SelfieDetails saved = selfieDetailsRepository.save(details);
 
-        // Transition states:
-        if ("APPROVED".equals(verificationResult.status())) {
-            loanApplicationService.updateApplicationStatus(user, ApplicationStatus.SELFIE_PENDING, ApplicationStatus.SELFIE_APPROVED);
-            loanApplicationService.updateApplicationStatus(user, ApplicationStatus.SELFIE_APPROVED, ApplicationStatus.APPROVED);
-            log.info("Selfie approved and loan application approved for id: {}", applicationId);
-        } else {
-            loanApplicationService.updateApplicationStatus(user, ApplicationStatus.SELFIE_PENDING, ApplicationStatus.SELFIE_REJECTED);
-            loanApplicationService.updateApplicationStatus(user, ApplicationStatus.SELFIE_REJECTED, ApplicationStatus.REJECTED);
-            log.warn("Selfie matching score too low ({}) for application id: {}. Loan application rejected.", verificationResult.matchScore(), applicationId);
-        }
+        // Transition status to SELFIE_UNDER_REVIEW, waiting for admin approval
+        loanApplicationService.updateApplicationStatus(user, ApplicationStatus.SELFIE_PENDING, ApplicationStatus.SELFIE_UNDER_REVIEW);
+        log.info("Selfie uploaded successfully. Application id: {} is now SELFIE_UNDER_REVIEW.", applicationId);
 
         return saved;
     }

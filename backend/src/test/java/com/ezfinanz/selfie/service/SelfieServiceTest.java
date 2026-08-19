@@ -88,7 +88,7 @@ class SelfieServiceTest {
     }
 
     @Test
-    void uploadSelfie_Success_Approved() {
+    void uploadSelfie_Success_UnderReview() {
         MockMultipartFile validFile = new MockMultipartFile("selfie", "selfie.jpg", "image/jpeg", "image-content".getBytes());
 
         when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(mockUser));
@@ -106,12 +106,11 @@ class SelfieServiceTest {
         assertTrue(result.isLivenessPassed());
         assertEquals("APPROVED", result.getStatus());
 
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_PENDING, ApplicationStatus.SELFIE_APPROVED);
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_APPROVED, ApplicationStatus.APPROVED);
+        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_PENDING, ApplicationStatus.SELFIE_UNDER_REVIEW);
     }
 
     @Test
-    void uploadSelfie_Failure_Rejected() {
+    void uploadSelfie_Failure_UnderReview() {
         MockMultipartFile failingFile = new MockMultipartFile("selfie", "fail.jpg", "image/jpeg", "image-content".getBytes());
 
         when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(mockUser));
@@ -129,8 +128,7 @@ class SelfieServiceTest {
         assertFalse(result.isLivenessPassed());
         assertEquals("REJECTED", result.getStatus());
 
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_PENDING, ApplicationStatus.SELFIE_REJECTED);
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_REJECTED, ApplicationStatus.REJECTED);
+        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_PENDING, ApplicationStatus.SELFIE_UNDER_REVIEW);
     }
 
     @Test
