@@ -4,19 +4,19 @@ I am building a **Personal Loan Application System** using **Spring Boot and Rea
 
 The goal of this project is to build a complete online loan application process where a customer can apply for a personal loan and an admin can review, approve, reject, and process the application.
 
-                               EZFINANZ
+                    EZFINANZ
 
              ┌─────────┴─────────┐
-             │                                                  |
-         CUSTOMER                             ADMIN
-             │                                                 │
-       Apply for loan                        Review loan
-             │                                                 │
+             │                   |
+         CUSTOMER              ADMIN
+             │                   │
+       Apply for loan          Review loan
+             │                   │
              └─────────┬─────────┘
-                                       │
-                               Spring Boot
-                                       │
-                                   MySQL
+                       │
+                    Spring Boot
+                       │
+                      MySQL
 
 ## Customer Flow
 
@@ -76,10 +76,10 @@ The modules will be kept independent as much as possible so that specific module
 
 The frontend will be developed using:
 
-* React
-* Vite
-* Axios
-* Tailwind CSS
+Next.js
+TypeScript
+Tailwind CSS
+Axios
 
 The frontend will have separate flows for **customers and admins**.
 
@@ -211,3 +211,4 @@ This status will be used by both the customer and admin dashboards to understand
 I am starting the development step by step, beginning with the **Spring Boot backend, MySQL database, authentication, and the core loan application flow**.
 
 The project will be developed incrementally, with the architecture and modules being improved as new features are implemented.
+
