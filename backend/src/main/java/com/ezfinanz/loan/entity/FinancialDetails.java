@@ -19,7 +19,7 @@ public class FinancialDetails {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "application_id", nullable = false)
+    @JoinColumn(name = "application_id", nullable = false, unique = true)
     private LoanApplication application;
 
     @Column(name = "monthly_income", nullable = false, precision = 18, scale = 2)
@@ -42,4 +42,16 @@ public class FinancialDetails {
 
     @Column(nullable = false, length = 100)
     private String designation;
+
+    @Column(name = "income_verified", nullable = false)
+    @Builder.Default
+    private boolean incomeVerified = false;
+
+    @Column(name = "debt_verified", nullable = false)
+    @Builder.Default
+    private boolean debtVerified = false;
+
+    @Column(name = "credit_score_verified", nullable = false)
+    @Builder.Default
+    private boolean creditScoreVerified = false;
 }

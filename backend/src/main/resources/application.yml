@@ -23,3 +23,12 @@ jwt:
   # This matches a secure signature requirement for HMAC-SHA256.
   secret: ${JWT_SECRET:dGhlLXF1aWNrLWJyb3duLWZveC1qdW1wcy1vdmVyLXRoZS1sYXp5LWRvZy1hbmQtc29tZS1tb3JlLXJhbmRvbS1jaGFyYWN0ZXJzLXNlY3JldC1rZXk=}
   expiration: 86400000 # 24 hours in milliseconds
+
+app:
+  eligibility:
+    min-credit-score: 750
+    partial-credit-score: 650
+    max-dti: 40.0
+    partial-dti: 45.0
+    income-factor: 10
+    require-financial-verification: false

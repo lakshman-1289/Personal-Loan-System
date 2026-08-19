@@ -1,5 +1,6 @@
 package com.ezfinanz.loan.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -16,12 +17,15 @@ import java.math.BigDecimal;
 public class FinancialRequest {
 
     @NotNull(message = "Monthly income is required")
+    @DecimalMin(value = "0.01", message = "Monthly income must be greater than zero")
     private BigDecimal monthlyIncome;
 
     @NotNull(message = "Annual income is required")
+    @DecimalMin(value = "0.01", message = "Annual income must be greater than zero")
     private BigDecimal annualIncome;
 
     @NotNull(message = "Requested loan amount is required")
+    @DecimalMin(value = "0.01", message = "Requested loan amount must be greater than zero")
     private BigDecimal requestedAmount;
 
     @NotNull(message = "Credit score is required")
@@ -30,6 +34,7 @@ public class FinancialRequest {
     private Integer creditScore;
 
     @NotNull(message = "Existing debt is required")
+    @DecimalMin(value = "0.00", message = "Existing debt cannot be negative")
     private BigDecimal existingDebt;
 
     @NotBlank(message = "Employer name is required")
