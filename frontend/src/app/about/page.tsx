@@ -1,0 +1,53 @@
+import React from 'react';
+import { Award, Briefcase, Eye, ShieldCheck } from 'lucide-react';
+
+export default function About() {
+  return (
+    <div className="space-y-16 py-6 max-w-4xl mx-auto">
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-extrabold text-white tracking-tight">About EZFINANZ</h1>
+        <p className="text-slate-400 text-sm max-w-xl mx-auto leading-relaxed">
+          We are committed to making personal financing accessible, transparent, and completely digital for customers across India.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6">
+        <div className="bg-slate-900/40 border border-slate-900 p-6 rounded-2xl space-y-3">
+          <Eye className="h-8 w-8 text-indigo-500" />
+          <h4 className="font-semibold text-white text-base">Our Vision</h4>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            To become the most trusted consumer lending partner in India by integrating cutting-edge financial algorithms, secure biometric checks, and straightforward reducing-balance interest options.
+          </p>
+        </div>
+
+        <div className="bg-slate-900/40 border border-slate-900 p-6 rounded-2xl space-y-3">
+          <Briefcase className="h-8 w-8 text-indigo-500" />
+          <h4 className="font-semibold text-white text-base">Who We Are</h4>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            EZFINANZ (under Bhalchandra Tech Private Limited) operates as a digital lending gateway. We build robust systems that connect applicants directly with credit assessment engines, eliminating intermediate bank queues.
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-6 pt-4">
+        <h3 className="text-xl font-bold text-white tracking-tight">Our Core Principles</h3>
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            <ShieldCheck className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+            <div>
+              <h5 className="text-sm font-semibold text-slate-200">Security First</h5>
+              <p className="text-xs text-slate-500 mt-1">We utilize JWT encryption, standard secure file storage repositories, and liveness-based face verification checks to keep identity records protected.</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <Award className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+            <div>
+              <h5 className="text-sm font-semibold text-slate-200">100% Digital Execution</h5>
+              <p className="text-xs text-slate-500 mt-1">From initial registration down to the final loan disbursement and repayment scheduling, the customer onboarding experience is 100% digital and paperless.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

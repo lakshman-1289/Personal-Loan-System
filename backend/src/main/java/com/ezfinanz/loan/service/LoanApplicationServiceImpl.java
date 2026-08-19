@@ -81,10 +81,8 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     }
 
     private boolean isTerminalState(ApplicationStatus status) {
-        return status == ApplicationStatus.APPROVED || 
-               status == ApplicationStatus.DISBURSED || 
+        return status == ApplicationStatus.DISBURSED || 
                status == ApplicationStatus.REJECTED || 
-               status == ApplicationStatus.NOT_ELIGIBLE || 
                status == ApplicationStatus.SELFIE_REJECTED;
     }
 }

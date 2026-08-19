@@ -140,12 +140,12 @@ public class AdminLoanServiceImpl implements AdminLoanService {
         SelfieDetails saved = selfieDetailsRepository.save(details);
 
         if ("APPROVED".equals(review.getStatus())) {
-            loanApplicationService.updateApplicationStatus(admin, ApplicationStatus.SELFIE_UNDER_REVIEW, ApplicationStatus.SELFIE_APPROVED);
-            loanApplicationService.updateApplicationStatus(admin, ApplicationStatus.SELFIE_APPROVED, ApplicationStatus.APPROVED);
+            loanApplicationService.updateApplicationStatus(application.getUser(), ApplicationStatus.SELFIE_UNDER_REVIEW, ApplicationStatus.SELFIE_APPROVED);
+            loanApplicationService.updateApplicationStatus(application.getUser(), ApplicationStatus.SELFIE_APPROVED, ApplicationStatus.APPROVED);
             log.info("Admin approved selfie for application id: {}", applicationId);
         } else {
-            loanApplicationService.updateApplicationStatus(admin, ApplicationStatus.SELFIE_UNDER_REVIEW, ApplicationStatus.SELFIE_REJECTED);
-            loanApplicationService.updateApplicationStatus(admin, ApplicationStatus.SELFIE_REJECTED, ApplicationStatus.REJECTED);
+            loanApplicationService.updateApplicationStatus(application.getUser(), ApplicationStatus.SELFIE_UNDER_REVIEW, ApplicationStatus.SELFIE_REJECTED);
+            loanApplicationService.updateApplicationStatus(application.getUser(), ApplicationStatus.SELFIE_REJECTED, ApplicationStatus.REJECTED);
             log.warn("Admin rejected selfie for application id: {}. Reason: {}", applicationId, review.getReason());
         }
 
@@ -177,8 +177,8 @@ public class AdminLoanServiceImpl implements AdminLoanService {
                 .orElseThrow(() -> new IllegalArgumentException("Bank details not found for application id: " + applicationId));
 
         // Transition: APPROVED -> DISBURSEMENT_PENDING -> DISBURSED
-        loanApplicationService.updateApplicationStatus(admin, ApplicationStatus.APPROVED, ApplicationStatus.DISBURSEMENT_PENDING);
-        loanApplicationService.updateApplicationStatus(admin, ApplicationStatus.DISBURSEMENT_PENDING, ApplicationStatus.DISBURSED);
+        loanApplicationService.updateApplicationStatus(application.getUser(), ApplicationStatus.APPROVED, ApplicationStatus.DISBURSEMENT_PENDING);
+        loanApplicationService.updateApplicationStatus(application.getUser(), ApplicationStatus.DISBURSEMENT_PENDING, ApplicationStatus.DISBURSED);
 
         // Generate Repayment/Amortization Schedule
         generateRepaymentSchedule(application, terms);

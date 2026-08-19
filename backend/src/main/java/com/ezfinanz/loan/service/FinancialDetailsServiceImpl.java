@@ -1,5 +1,6 @@
 package com.ezfinanz.loan.service;
 
+import com.ezfinanz.common.enums.ApplicationStatus;
 import com.ezfinanz.common.entities.LoanApplication;
 import com.ezfinanz.common.entities.User;
 import com.ezfinanz.common.enums.Role;
@@ -50,6 +51,15 @@ public class FinancialDetailsServiceImpl implements FinancialDetailsService {
 
         FinancialDetails saved = financialDetailsRepository.save(details);
         log.info("Financial details submitted successfully for application id: {}", applicationId);
+
+        // Reset application status to ELIGIBILITY_PENDING to allow recheck
+        if (application.getStatus() == ApplicationStatus.KYC_COMPLETED || 
+            application.getStatus() == ApplicationStatus.ELIGIBILITY_PENDING || 
+            application.getStatus() == ApplicationStatus.NOT_ELIGIBLE) {
+            application.setStatus(ApplicationStatus.ELIGIBILITY_PENDING);
+            loanApplicationRepository.save(application);
+            log.info("Transitioned application {} status to ELIGIBILITY_PENDING for evaluation.", application.getId());
+        }
 
         return saved;
     }

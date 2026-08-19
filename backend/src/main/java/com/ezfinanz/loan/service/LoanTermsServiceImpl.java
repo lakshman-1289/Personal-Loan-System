@@ -58,8 +58,10 @@ public class LoanTermsServiceImpl implements LoanTermsService {
         }
 
         // State validation
-        if (application.getStatus() != ApplicationStatus.ELIGIBLE && application.getStatus() != ApplicationStatus.PARTIALLY_ELIGIBLE) {
-            throw new IllegalArgumentException("Application is not in ELIGIBLE or PARTIALLY_ELIGIBLE status. Current status: " + application.getStatus());
+        if (application.getStatus() != ApplicationStatus.ELIGIBLE && 
+            application.getStatus() != ApplicationStatus.PARTIALLY_ELIGIBLE && 
+            application.getStatus() != ApplicationStatus.TERMS_PENDING) {
+            throw new IllegalArgumentException("Application is not in ELIGIBLE, PARTIALLY_ELIGIBLE, or TERMS_PENDING status. Current status: " + application.getStatus());
         }
 
         EligibilityResult eligibility = eligibilityResultRepository.findByApplication(application)
