@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EZFINANZ Onboarding OTP</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #F8FAFC;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border: 1px solid #E4EAF0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .header {
+            background-color: #FFFFFF;
+            padding: 32px 32px 16px 32px;
+            text-align: center;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0757A6; /* brand-blue */
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+        .logo span {
+            color: #18B66A; /* brand-green */
+        }
+        .content {
+            padding: 32px;
+            color: #1E293B;
+            line-height: 1.6;
+        }
+        .greeting {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .text {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 24px;
+        }
+        .otp-box {
+            background-color: #F8FAFC;
+            border: 1.5px dashed #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .otp-code {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            color: #18B66A; /* brand-green */
+            margin: 0;
+        }
+        .expiry {
+            font-size: 12px;
+            color: #94A3B8;
+            text-align: center;
+            margin-top: 8px;
+        }
+        .footer {
+            background-color: #F8FAFC;
+            padding: 24px 32px;
+            text-align: center;
+            border-top: 1px solid #E2E8F0;
+        }
+        .footer-text {
+            font-size: 11px;
+            color: #94A3B8;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="logo">EZ<span>FINANZ</span></span>
+        </div>
+        <div class="content">
+            <div class="greeting" th:text="'Hello, ' + ${email}">Hello, User</div>
+            <div class="text">
+                Thank you for applying for a personal loan with EZFINANZ. Please use the following One-Time Password (OTP) to verify your email address and continue your onboarding journey:
+            </div>
+            <div class="otp-box">
+                <div class="otp-code" th:text="${otp}">000000</div>
+                <div class="expiry">This code is valid for 10 minutes.</div>
+            </div>
+            <div class="text" style="margin-bottom: 0;">
+                If you did not request this verification code, please ignore this email or contact support if you suspect unauthorized access.
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-text">
+                © 2026 EZFINANZ Loans Private Ltd. All Rights Reserved.<br>
+                This is an automated system notification. Please do not reply directly to this mail.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
