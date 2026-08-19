@@ -48,9 +48,6 @@ public class EligibilityServiceImpl implements EligibilityService {
     @Value("${app.eligibility.income-factor:10}")
     private int incomeFactor;
 
-    @Value("${app.eligibility.require-financial-verification:false}")
-    private boolean requireFinancialVerification;
-
     @Override
     @Transactional
     public EligibilityResult checkEligibility(Long applicationId, String userEmail) {
@@ -73,14 +70,6 @@ public class EligibilityServiceImpl implements EligibilityService {
         // Retrieve existing FinancialDetails
         FinancialDetails financialDetails = financialDetailsRepository.findByApplication(application)
                 .orElseThrow(() -> new IllegalArgumentException("Financial details not found for application id: " + applicationId));
-
-        // Assert verification status flags are true conditionally
-        if (requireFinancialVerification) {
-            if (!financialDetails.isIncomeVerified() || !financialDetails.isDebtVerified() || !financialDetails.isCreditScoreVerified()) {
-                throw new IllegalArgumentException("Financial information has not been fully verified. " +
-                        "Income, existing debt, and credit score must be verified before eligibility can be calculated.");
-            }
-        }
 
         BigDecimal income = financialDetails.getMonthlyIncome();
         BigDecimal debt = financialDetails.getExistingDebt();

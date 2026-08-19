@@ -42,16 +42,4 @@ public class FinancialDetails {
 
     @Column(nullable = false, length = 100)
     private String designation;
-
-    @Column(name = "income_verified", nullable = false)
-    @Builder.Default
-    private boolean incomeVerified = false;
-
-    @Column(name = "debt_verified", nullable = false)
-    @Builder.Default
-    private boolean debtVerified = false;
-
-    @Column(name = "credit_score_verified", nullable = false)
-    @Builder.Default
-    private boolean creditScoreVerified = false;
 }

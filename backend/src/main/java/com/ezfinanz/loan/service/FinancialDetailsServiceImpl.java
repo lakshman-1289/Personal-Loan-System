@@ -5,7 +5,6 @@ import com.ezfinanz.common.entities.User;
 import com.ezfinanz.common.enums.Role;
 import com.ezfinanz.customer.repository.UserRepository;
 import com.ezfinanz.loan.dto.FinancialRequest;
-import com.ezfinanz.loan.dto.FinancialVerificationRequest;
 import com.ezfinanz.loan.entity.FinancialDetails;
 import com.ezfinanz.loan.repository.FinancialDetailsRepository;
 import com.ezfinanz.loan.repository.LoanApplicationRepository;
@@ -39,25 +38,7 @@ public class FinancialDetailsServiceImpl implements FinancialDetailsService {
 
         // Check if details already exist, update them. Else create.
         FinancialDetails details = financialDetailsRepository.findByApplication(application)
-                .orElse(null);
-
-        if (details == null) {
-            details = FinancialDetails.builder().application(application).build();
-            details.setIncomeVerified(false);
-            details.setDebtVerified(false);
-            details.setCreditScoreVerified(false);
-        } else {
-            // Reset verification state only if the specific values change
-            if (details.getMonthlyIncome().compareTo(request.getMonthlyIncome()) != 0) {
-                details.setIncomeVerified(false);
-            }
-            if (details.getExistingDebt().compareTo(request.getExistingDebt()) != 0) {
-                details.setDebtVerified(false);
-            }
-            if (!details.getCreditScore().equals(request.getCreditScore())) {
-                details.setCreditScoreVerified(false);
-            }
-        }
+                .orElse(FinancialDetails.builder().application(application).build());
 
         details.setMonthlyIncome(request.getMonthlyIncome());
         details.setAnnualIncome(request.getAnnualIncome());
@@ -89,30 +70,5 @@ public class FinancialDetailsServiceImpl implements FinancialDetailsService {
 
         return financialDetailsRepository.findByApplication(application)
                 .orElseThrow(() -> new IllegalArgumentException("Financial details not found for application id: " + applicationId));
-    }
-
-    @Override
-    @Transactional
-    public FinancialDetails verifyFinancialDetails(Long applicationId, FinancialVerificationRequest verificationRequest, String adminEmail) {
-        User admin = userRepository.findByEmail(adminEmail)
-                .orElseThrow(() -> new IllegalArgumentException("Admin not found: " + adminEmail));
-
-        if (admin.getRole() != Role.ADMIN) {
-            throw new IllegalArgumentException("Access denied: Only admins can verify financial details");
-        }
-
-        LoanApplication application = loanApplicationRepository.findById(applicationId)
-                .orElseThrow(() -> new IllegalArgumentException("Loan application not found: " + applicationId));
-
-        FinancialDetails details = financialDetailsRepository.findByApplication(application)
-                .orElseThrow(() -> new IllegalArgumentException("Financial details not found for application id: " + applicationId));
-
-        details.setIncomeVerified(verificationRequest.isIncomeVerified());
-        details.setDebtVerified(verificationRequest.isDebtVerified());
-        details.setCreditScoreVerified(verificationRequest.isCreditScoreVerified());
-
-        FinancialDetails saved = financialDetailsRepository.save(details);
-        log.info("Admin verified financial details for application id: {}", applicationId);
-        return saved;
     }
 }

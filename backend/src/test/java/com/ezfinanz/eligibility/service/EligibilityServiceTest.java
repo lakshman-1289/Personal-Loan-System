@@ -59,7 +59,6 @@ class EligibilityServiceTest {
         ReflectionTestUtils.setField(eligibilityService, "maxDti", BigDecimal.valueOf(40.0));
         ReflectionTestUtils.setField(eligibilityService, "partialDti", BigDecimal.valueOf(45.0));
         ReflectionTestUtils.setField(eligibilityService, "incomeFactor", 10);
-        ReflectionTestUtils.setField(eligibilityService, "requireFinancialVerification", false);
 
         mockUser = User.builder()
                 .id(1L)
@@ -87,9 +86,6 @@ class EligibilityServiceTest {
                 .requestedAmount(BigDecimal.valueOf(200000))
                 .creditScore(800)
                 .existingDebt(BigDecimal.valueOf(5000))
-                .incomeVerified(true)
-                .debtVerified(true)
-                .creditScoreVerified(true)
                 .build();
     }
 
@@ -191,18 +187,6 @@ class EligibilityServiceTest {
     }
 
     @Test
-    void checkEligibility_UnverifiedFinancialDetails_ThrowsException() {
-        ReflectionTestUtils.setField(eligibilityService, "requireFinancialVerification", true);
-        mockFinancials.setIncomeVerified(false);
-
-        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(mockUser));
-        when(loanApplicationRepository.findById(1L)).thenReturn(Optional.of(mockApplication));
-        when(financialDetailsRepository.findByApplication(mockApplication)).thenReturn(Optional.of(mockFinancials));
-
-        assertThrows(IllegalArgumentException.class, () -> eligibilityService.checkEligibility(1L, "user@example.com"));
-    }
-
-    @Test
     void checkEligibility_ZeroIncome_ThrowsException() {
         mockFinancials.setMonthlyIncome(BigDecimal.ZERO);
 
@@ -256,58 +240,6 @@ class EligibilityServiceTest {
         when(eligibilityResultRepository.findByApplication(mockApplication)).thenReturn(Optional.of(mockResult));
 
         EligibilityResult result = eligibilityService.getEligibilityResult(1L, "user@example.com");
-
-        assertNotNull(result);
-        assertEquals("ELIGIBLE", result.getResult());
-    }
-
-    @Test
-    void checkEligibility_ModeAMvpBypass_Success() {
-        ReflectionTestUtils.setField(eligibilityService, "requireFinancialVerification", false);
-        mockFinancials.setIncomeVerified(false);
-        mockFinancials.setDebtVerified(false);
-        mockFinancials.setCreditScoreVerified(false);
-
-        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(mockUser));
-        when(loanApplicationRepository.findById(1L)).thenReturn(Optional.of(mockApplication));
-        when(financialDetailsRepository.findByApplication(mockApplication)).thenReturn(Optional.of(mockFinancials));
-        when(eligibilityResultRepository.findByApplication(mockApplication)).thenReturn(Optional.empty());
-        when(eligibilityResultRepository.save(any(EligibilityResult.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        EligibilityResult result = eligibilityService.checkEligibility(1L, "user@example.com");
-
-        assertNotNull(result);
-        assertEquals("ELIGIBLE", result.getResult());
-    }
-
-    @Test
-    void checkEligibility_ModeBVerificationRequired_Rejection() {
-        ReflectionTestUtils.setField(eligibilityService, "requireFinancialVerification", true);
-        mockFinancials.setIncomeVerified(false);
-        mockFinancials.setDebtVerified(false);
-        mockFinancials.setCreditScoreVerified(false);
-
-        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(mockUser));
-        when(loanApplicationRepository.findById(1L)).thenReturn(Optional.of(mockApplication));
-        when(financialDetailsRepository.findByApplication(mockApplication)).thenReturn(Optional.of(mockFinancials));
-
-        assertThrows(IllegalArgumentException.class, () -> eligibilityService.checkEligibility(1L, "user@example.com"));
-    }
-
-    @Test
-    void checkEligibility_ModeCVerificationRequiredAndComplete_Success() {
-        ReflectionTestUtils.setField(eligibilityService, "requireFinancialVerification", true);
-        mockFinancials.setIncomeVerified(true);
-        mockFinancials.setDebtVerified(true);
-        mockFinancials.setCreditScoreVerified(true);
-
-        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(mockUser));
-        when(loanApplicationRepository.findById(1L)).thenReturn(Optional.of(mockApplication));
-        when(financialDetailsRepository.findByApplication(mockApplication)).thenReturn(Optional.of(mockFinancials));
-        when(eligibilityResultRepository.findByApplication(mockApplication)).thenReturn(Optional.empty());
-        when(eligibilityResultRepository.save(any(EligibilityResult.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        EligibilityResult result = eligibilityService.checkEligibility(1L, "user@example.com");
 
         assertNotNull(result);
         assertEquals("ELIGIBLE", result.getResult());
