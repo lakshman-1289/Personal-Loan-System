@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
-import { AlertCircle, ArrowRight, ClipboardList, Loader2 } from 'lucide-react';
+import { AlertCircle, ArrowRight, ClipboardList, Loader2, RefreshCw, Search } from 'lucide-react';
 
 interface SummaryData {
   applicationId: number;
@@ -18,7 +18,8 @@ interface SummaryData {
 export default function AdminDashboard() {
   const { session, loading: authLoading } = useAuth();
   const [applications, setApplications] = useState<SummaryData[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,10 +40,8 @@ export default function AdminDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const url = statusFilter 
-        ? `/api/v1/admin/applications?status=${statusFilter}&size=50`
-        : '/api/v1/admin/applications?size=50';
-      const response = await axios.get(url);
+      // Fetch a large size to enable clean client-side search and filtering
+      const response = await axios.get('/api/v1/admin/applications?size=1000');
       setApplications(response.data.content || []);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to retrieve administrative applications queue.');
@@ -55,7 +54,64 @@ export default function AdminDashboard() {
     if (session && session.role === 'ADMIN') {
       fetchApplications();
     }
-  }, [session, statusFilter]);
+  }, [session]);
+
+  // Visual status badge styles
+  const getBadgeStyle = (status: string) => {
+    switch (status) {
+      case 'SELFIE_UNDER_REVIEW':
+        return 'bg-amber-100 text-amber-800 border border-amber-200';
+      case 'APPROVED':
+      case 'SELFIE_APPROVED':
+      case 'DISBURSEMENT_PENDING':
+        return 'bg-emerald-100 text-emerald-800 border border-emerald-200';
+      case 'DISBURSED':
+        return 'bg-blue-100 text-blue-800 border border-blue-200';
+      case 'REJECTED':
+      case 'SELFIE_REJECTED':
+      case 'NOT_ELIGIBLE':
+        return 'bg-rose-100 text-rose-800 border border-rose-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border border-gray-200';
+    }
+  };
+
+  // Consolidated client-side filtering logic
+  const filteredApplications = applications.filter((app) => {
+    // 1. Keyword search (matches ID, applicant name/email)
+    const normalizedQuery = searchTerm.toLowerCase().trim();
+    const matchesSearch = normalizedQuery === '' ||
+      app.applicationId.toString().includes(normalizedQuery) ||
+      app.applicantName.toLowerCase().includes(normalizedQuery);
+
+    // 2. Status Category filter mapping
+    let matchesStatus = true;
+    const status = app.status;
+
+    switch (statusFilter) {
+      case 'ONBOARDING':
+        matchesStatus = ['DRAFT', 'EMAIL_VERIFICATION', 'PHONE_VERIFICATION', 'KYC_PENDING', 'KYC_COMPLETED', 'ELIGIBILITY_PENDING', 'ELIGIBLE', 'TERMS_PENDING', 'DECLARATION_PENDING', 'SELFIE_PENDING'].includes(status);
+        break;
+      case 'SELFIE_REVIEW':
+        matchesStatus = (status === 'SELFIE_UNDER_REVIEW');
+        break;
+      case 'READY_DISBURSE':
+        matchesStatus = ['APPROVED', 'DISBURSEMENT_PENDING', 'SELFIE_APPROVED'].includes(status);
+        break;
+      case 'DISBURSED':
+        matchesStatus = (status === 'DISBURSED');
+        break;
+      case 'REJECTED':
+        matchesStatus = ['REJECTED', 'SELFIE_REJECTED', 'NOT_ELIGIBLE'].includes(status);
+        break;
+      case 'ALL':
+      default:
+        matchesStatus = true;
+        break;
+    }
+
+    return matchesSearch && matchesStatus;
+  });
 
   if (authLoading || loading) {
     return (
@@ -82,27 +138,8 @@ export default function AdminDashboard() {
     );
   }
 
-  // Visual status badge styles
-  const getBadgeStyle = (status: string) => {
-    switch (status) {
-      case 'SELFIE_UNDER_REVIEW':
-        return 'bg-amber-100 text-amber-800 border border-amber-200';
-      case 'APPROVED':
-      case 'SELFIE_APPROVED':
-        return 'bg-emerald-100 text-emerald-800 border border-emerald-200';
-      case 'DISBURSED':
-        return 'bg-blue-100 text-blue-800 border border-blue-200';
-      case 'REJECTED':
-      case 'SELFIE_REJECTED':
-      case 'NOT_ELIGIBLE':
-        return 'bg-rose-100 text-rose-800 border border-rose-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border border-gray-200';
-    }
-  };
-
   return (
-    <div className="max-w-6xl mx-auto space-y-8 py-6 text-neutral-text">
+    <div className="max-w-6xl mx-auto space-y-6 py-6 text-neutral-text">
       {/* Intro Banner */}
       <div className="bg-white border border-[#E4EAF0] rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-sm">
         <div className="flex items-center gap-4">
@@ -110,7 +147,7 @@ export default function AdminDashboard() {
             <ClipboardList className="h-7 w-7 text-brand-blue" />
           </div>
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold tracking-tight text-neutral-text">Lending Audit Queue</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-neutral-text font-sans">Lending Audit Queue</h1>
             <p className="text-neutral-secondary text-xs leading-relaxed max-w-xl">
               Inspect loan applicant journeys, verify uploaded identity selfies, and execute bank disbursements.
             </p>
@@ -118,20 +155,47 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Filter Options */}
-      <div className="flex gap-4 items-center bg-white border border-[#E4EAF0] rounded-xl p-4">
-        <span className="text-xs font-semibold text-neutral-secondary uppercase tracking-wider">Filter Status:</span>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-white border border-[#E4EAF0] rounded-lg px-3 py-1.5 text-xs text-neutral-text focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green"
+      {/* Filter & Search Bar */}
+      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between bg-white border border-[#E4EAF0] rounded-xl p-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row flex-1 gap-4 items-stretch sm:items-center">
+          {/* Keyword Search Input */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-muted" />
+            <input
+              type="text"
+              placeholder="Search by ID, name or email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-white border border-neutral-border rounded-lg pl-9 pr-4 py-2 text-xs text-neutral-text placeholder-neutral-muted focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue"
+            />
+          </div>
+
+          {/* Consolidated Status Category Filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-neutral-secondary uppercase tracking-wider whitespace-nowrap">Filter Status:</span>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="bg-white border border-neutral-border rounded-lg px-3 py-2 text-xs text-neutral-text focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue"
+            >
+              <option value="ALL">All Applications</option>
+              <option value="ONBOARDING">In Onboarding (Draft / Verification)</option>
+              <option value="SELFIE_REVIEW">Awaiting Selfie Review</option>
+              <option value="READY_DISBURSE">Ready to Disburse</option>
+              <option value="DISBURSED">Active / Disbursed</option>
+              <option value="REJECTED">Rejected / Ineligible</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Refresh Action */}
+        <button
+          onClick={fetchApplications}
+          className="inline-flex items-center gap-2 self-end md:self-auto bg-neutral-section hover:bg-neutral-border border border-neutral-border text-neutral-text text-xs font-semibold px-4 py-2 rounded-lg cursor-pointer transition"
         >
-          <option value="">All Applications</option>
-          <option value="SELFIE_UNDER_REVIEW">Awaiting Selfie Review</option>
-          <option value="APPROVED">Approved / Ready to Disburse</option>
-          <option value="DISBURSED">Active / Disbursed</option>
-          <option value="REJECTED">Rejected Loans</option>
-        </select>
+          <RefreshCw className="h-3.5 w-3.5 text-neutral-secondary" />
+          <span>Refresh</span>
+        </button>
       </div>
 
       {/* Table queue */}
@@ -150,14 +214,14 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E4EAF0] bg-white text-xs">
-              {applications.length === 0 ? (
+              {filteredApplications.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-neutral-secondary">
                     No applications currently match the query filters.
                   </td>
                 </tr>
               ) : (
-                applications.map((app) => (
+                filteredApplications.map((app) => (
                   <tr key={app.applicationId} className="hover:bg-neutral-section/50 transition">
                     <td className="px-6 py-4 font-mono font-bold text-brand-blue">#EZ-{app.applicationId}</td>
                     <td className="px-6 py-4 text-neutral-text font-semibold">{app.applicantName}</td>
