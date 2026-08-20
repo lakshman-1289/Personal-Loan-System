@@ -18,6 +18,7 @@ build/
 # IDE configurations
 .idea/
 .vscode/
+.metadata/
 *.suo
 *.ntvs*
 *.njsproj
