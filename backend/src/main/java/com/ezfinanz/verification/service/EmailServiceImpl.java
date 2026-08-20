@@ -27,6 +27,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendOtp(String email, String otp) {
         log.info("Preparing Thymeleaf-formatted OTP email for recipient: {}", email);
+        System.out.printf("[Email OTP] Verification code to %s: %s%n", email, otp);
 
         try {
             MimeMessage message = mailSender.createMimeMessage();

@@ -40,6 +40,7 @@ public class SmsServiceImpl implements SmsService {
     public void sendSms(String phone, String messageContent) {
         String normalizedPhone = normalizePhoneNumber(phone);
         log.info("Sending Twilio SMS to normalized number: {}", normalizedPhone);
+        System.out.printf("[SMS OTP] Code to %s: %s%n", normalizedPhone, messageContent);
 
         try {
             Message message = Message.creator(
