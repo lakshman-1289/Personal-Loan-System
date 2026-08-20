@@ -50,6 +50,7 @@ flowchart TD
 
     subgraph External [External APIs]
         TwilioAPI[Twilio Gateway]
+        GoogleOAuth[Google Accounts]
     end
 
     UI --> AuthCtx
@@ -153,6 +154,9 @@ erDiagram
 Provides login, registration, and user session management.
 *   **JWT Token Lifecycle**: Upon successful login, [JwtTokenProvider.java](file:///c:/Users/Nithinkumar/Desktop/Lakshman%20Desktop/Personal-Loan-System/backend/src/main/java/com/ezfinanz/auth/util/JwtTokenProvider.java) encodes the user's ID, email, and security role into a JWT signed with a Base64-encoded secret key using the HMAC-SHA256 signature algorithm.
 *   **Security Filter**: The [JwtAuthenticationFilter.java](file:///c:/Users/Nithinkumar/Desktop/Lakshman%20Desktop/Personal-Loan-System/backend/src/main/java/com/ezfinanz/auth/config/JwtAuthenticationFilter.java) runs on every request. It extracts the token from the `Authorization: Bearer <token>` HTTP header, validates its expiration and signature, and populates the `SecurityContextHolder` with standard Spring User Principal credentials.
+*   **Google OAuth2 Integration**: Added `spring-boot-starter-oauth2-client` configurations to allow passwordless single sign-on:
+    *   *Credential Safety*: Programmed `DotEnvEnvironmentPostProcessor.java` to read client IDs and secrets from local gitignored `.env` variables at runtime.
+    *   *OAuth Success Handler*: Created `OAuth2AuthenticationSuccessHandler.java`. Upon successful sign-in, it registers Google users dynamically as `CUSTOMER` with verified email flags, assigns a unique dummy phone number (to satisfy unique db schemas), generates a secure random password, and forwards a valid JWT token back to the frontend.
 *   **Database Seeding**: The [AdminUserInitializer.java](file:///c:/Users/Nithinkumar/Desktop/Lakshman%20Desktop/Personal-Loan-System/backend/src/main/java/com/ezfinanz/auth/config/AdminUserInitializer.java) implements `CommandLineRunner`. During startup, it checks the database for an admin role. If not present, it hashes a seed password via `BCryptPasswordEncoder` and inserts the default admin account:
     *   **Admin Email**: `admin@ezfinanz.com`
     *   **Admin Password**: `Admin@123`
@@ -164,21 +168,25 @@ Secures phone and email channels using One-Time Passwords (OTPs).
     String otp = String.format("%06d", new Random().nextInt(999999));
     ```
     Tokens are stored in the database with a 10-minute expiry date (`expiryDate = LocalDateTime.now().plusMinutes(10)`).
-*   **SMS & Email Gateways**: 
-    *   *Email*: Simulates email delivery by outputting SMTP payloads and code parameters to the logger logs.
-    *   *SMS*: Integrates with the **Twilio SMS API**. The service [SmsServiceImpl.java](file:///c:/Users/Nithinkumar/Desktop/Lakshman%20Desktop/Personal-Loan-System/backend/src/main/java/com/ezfinanz/verification/service/SmsServiceImpl.java) instantiates a Twilio client and dispatches the OTP payload asynchronously:
-        ```java
-        Message.creator(
-            new PhoneNumber(toPhone),
-            new PhoneNumber(twilioFromNumber),
-            "Your EZFINANZ OTP code is: " + otp
-        ).create();
-        ```
+*   **Real SMTP Email Service**: Added `spring-boot-starter-mail` and `spring-boot-starter-thymeleaf` dependencies. [EmailServiceImpl.java](file:///c:/Users/Nithinkumar/Desktop/Lakshman%20Desktop/Personal-Loan-System/backend/src/main/java/com/ezfinanz/verification/service/EmailServiceImpl.java) uses `JavaMailSender` and Thymeleaf's `TemplateEngine` to bind recipient data to `otp-email.html` template. It also prints the code directly to the server console log for ease of testing.
+*   **Twilio SMS Gateway**: Integrates with the **Twilio SMS API**. The service [SmsServiceImpl.java](file:///c:/Users/Nithinkumar/Desktop/Lakshman%20Desktop/Personal-Loan-System/backend/src/main/java/com/ezfinanz/verification/service/SmsServiceImpl.java) instantiates a Twilio client and dispatches the OTP payload asynchronously:
+    ```java
+    Message.creator(
+        new PhoneNumber(toPhone),
+        new PhoneNumber(twilioFromNumber),
+        "Your EZFINANZ OTP code is: " + otp
+    ).create();
+    ```
+    *Trial Sandbox Fallback*: Catches Twilio exceptions (e.g. when sending to unverified trial numbers) and prints the code directly to the console so that local development remains unblocked.
 *   **Token Verification**: Upon submission, the service fetches the latest unused token. If the code matches and is not expired, the user account flags (`emailVerified` / `phoneVerified`) are set to true. The validated token is deleted from the database to prevent reuse.
 
 ### C. Loan Lifecycle State Machine (`com.ezfinanz.loan`)
 Automates status transitions on the application resource.
-*   **Initialization**: Calling `POST /api/v1/applications` creates a new loan application record. If the user has an active application, the request is rejected with a validation error.
+*   **Initialization & Dashboard Lifecycle**:
+    *   Previously, visiting the dashboard automatically generated a new application on load, overwriting completed/disbursed histories.
+    *   *Resolution*: Created a read-only endpoint `GET /api/v1/applications/latest`. The customer dashboard queries this to fetch the actual status.
+    *   *Empty State*: If no application exists, a welcome card is displayed with an explicit "Apply for a Personal Loan" button.
+    *   *Re-Apply*: If the current status is terminal (`DISBURSED` or `REJECTED`), a status card is rendered with an option to "Apply for another Loan" which executes the `POST` request to start a new application step.
 *   **State Machine Transitions**:
     ```text
     [DRAFT / Created]
@@ -186,7 +194,7 @@ Automates status transitions on the application resource.
            ▼
     [EMAIL_VERIFICATION] ──(Verify Email OTP)──► [PHONE_VERIFICATION]
                                                         │
-                                                (Verify Phone OTP)
+                                                 (Verify Phone OTP)
                                                         │
                                                         ▼
     [KYC_PENDING] ◄─────────────────────────────────────┘
@@ -232,8 +240,12 @@ The frontend is built with **Next.js 15** and **React 19** using the App Router 
       return config;
     });
     ```
-2.  **Protected Route Guards**: Wraps sensitive pages. If a session is missing or the role does not match, the guard redirects the client.
-3.  **Onboarding Wizard Layout**: Uses a multi-step form wizard to guide the customer through the loan journey:
+2.  **Google OAuth Redirection Success Handler**: Handles callback token processing at [`/login/oauth2/success/page.tsx`](file:///c:/Users/Nithinkumar/Desktop/Lakshman%20Desktop/Personal-Loan-System/frontend/src/app/login/oauth2/success/page.tsx). It decodes the JWT claims in browser memory, updates context states, and handles security redirects.
+3.  **Real-Time Admin Dashboard**:
+    *   Consolidated system state codes in a simplified 5-category dropdown filter.
+    *   Added a real-time keyword search input matching applicant ID, name, or email instantly on the client side.
+    *   Modified the API fetch call to load all active queue entries on mount (`size=1000`) and handle query updates in-memory to prevent table redraw lag.
+4.  **Onboarding Wizard Layout**: Uses a multi-step form wizard to guide the customer through the loan journey:
     *   `app/register/page.tsx` & `app/login/page.tsx`
     *   `app/verify/email/page.tsx` & `app/verify/phone/page.tsx`
     *   `app/apply/kyc/page.tsx`
@@ -263,6 +275,22 @@ The frontend is built with **Next.js 15** and **React 19** using the App Router 
 *   **Description**: Modifying enum values in code caused database mismatch errors because JPA maps enums to integer indexes by default.
 *   **Resolution**: Added the `@Enumerated(EnumType.STRING)` annotation to all entity enum fields. This stores enums as strings (e.g., `APPROVED` or `REJECTED`) in MySQL, making database schema updates safe.
 
+### Challenge 4: React Infinite Render Loop in Auth Context
+*   **Description**: Navigating to OAuth callback handlers triggered a `Maximum update depth exceeded` crash.
+*   **Resolution**: The context login method references were recreated on every render of `AuthProvider`. Wrapped the `login()` and `logout()` context methods in `useCallback` hooks and added active session presence checks inside page redirect effects to stabilize references.
+
+### Challenge 5: Twilio Trial Account Sandbox Limitations
+*   **Description**: Triggering OTPs to unverified destination phone numbers threw an uncaught `ApiException` from Twilio's client SDK, crashing backend controller processes.
+*   **Resolution**: Intercepted exceptions inside `SmsServiceImpl.java` using a try-catch fallback. If Twilio blocks the SMS, the backend prints a warning and logs the OTP directly to stdout/console. This prevents server crashes and lets developer testing continue uninterrupted.
+
+### Challenge 6: Next.js Dev Server HMR Webpack Cache Corruption
+*   **Description**: Modifying pages or styles while the development server was active led to module chunk mismatches throwing `Cannot read properties of undefined (reading 'call')`.
+*   **Resolution**: Terminated the running dev tasks and deleted the `.next` compilation cache folder, forcing a clean webpack chunk rebuild on start.
+
+### Challenge 7: Customer Dashboard Application Overwrites
+*   **Description**: Visiting the dashboard automatically triggered a `POST` request to start a new loan application. For users with active or terminal state applications (disbursed or rejected), this broke their status pages and forced them back into `KYC_PENDING` steps.
+*   **Resolution**: Swapped the automatic creation for a `GET /api/v1/applications/latest` check. The user dashboard now displays their actual active or terminal application status, and only executes a new application creation when they click the **"Apply for another Loan"** CTA.
+
 ---
 
 ## 6. How to Build & Run the System
@@ -273,7 +301,20 @@ Start MySQL on port `3306` and create the schema:
 CREATE DATABASE ezfinanz;
 ```
 
-### Step 2: Boot Backend App
+### Step 2: Configure Environment
+Create a `.env` file at the root of the project to secure credentials:
+```env
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+SMTP_USERNAME=ezfinanzloanservice@gmail.com
+SMTP_PASSWORD=your_gmail_app_password
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_API_KEY=your_twilio_api_key
+TWILIO_API_SECRET=your_twilio_api_secret
+TWILIO_FROM_NUMBER=your_twilio_number
+```
+
+### Step 3: Boot Backend App
 Open a terminal in the `backend/` folder and run:
 ```powershell
 .\mvnw.cmd clean spring-boot:run
@@ -282,7 +323,7 @@ The server will start on port `8080` and seed the default admin account:
 *   **Admin Email**: `admin@ezfinanz.com`
 *   **Admin Password**: `Admin@123`
 
-### Step 3: Run Frontend
+### Step 4: Run Frontend
 Open a terminal in the `frontend/` folder and run:
 ```powershell
 npm install
