@@ -56,3 +56,9 @@ app:
     processing-fee-pct: 2.0
     gst-pct: 18.0
     default-annual-interest-rate: 12.0
+
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID}
+  api-key: ${TWILIO_API_KEY}
+  api-secret: ${TWILIO_API_SECRET}
+  from-number: ${TWILIO_FROM_NUMBER}
