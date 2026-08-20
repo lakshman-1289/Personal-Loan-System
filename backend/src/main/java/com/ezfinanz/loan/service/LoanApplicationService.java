@@ -10,4 +10,5 @@ public interface LoanApplicationService {
     LoanApplication createApplication(String userEmail);
     Optional<LoanApplication> getActiveApplication(User user);
     void updateApplicationStatus(User user, ApplicationStatus expectedStatus, ApplicationStatus newStatus);
+    Optional<LoanApplication> getLatestApplication(String email);
 }

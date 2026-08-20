@@ -80,6 +80,14 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         }
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<LoanApplication> getLatestApplication(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + email));
+        return loanApplicationRepository.findFirstByUserOrderByCreatedAtDesc(user);
+    }
+
     private boolean isTerminalState(ApplicationStatus status) {
         return status == ApplicationStatus.DISBURSED || 
                status == ApplicationStatus.REJECTED || 

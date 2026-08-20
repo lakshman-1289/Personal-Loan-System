@@ -18,8 +18,9 @@ import {
 } from 'lucide-react';
 
 interface ApplicationData {
-  applicationId: number;
-  status: string;
+  hasApplication: boolean;
+  applicationId?: number;
+  status?: string;
 }
 
 export default function Dashboard() {
@@ -35,23 +36,41 @@ export default function Dashboard() {
     }
   }, [session, authLoading, router]);
 
-  // Fetch or create the user's active loan application
+  // Fetch user's latest loan application
+  const fetchApplication = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('/api/v1/applications/latest');
+      setApp(response.data);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to fetch active application.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (!session) return;
-
-    const fetchApplication = async () => {
-      try {
-        const response = await axios.post('/api/v1/applications');
-        setApp(response.data);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to fetch active application.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchApplication();
+    if (session) {
+      fetchApplication();
+    }
   }, [session]);
+
+  const handleApplyNewLoan = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.post('/api/v1/applications');
+      setApp({
+        hasApplication: true,
+        applicationId: response.data.applicationId,
+        status: response.data.status
+      });
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to start a new loan application.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (authLoading || loading) {
     return (
@@ -78,7 +97,42 @@ export default function Dashboard() {
     );
   }
 
-  if (!app) return null;
+  if (!app || !app.hasApplication) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-12 py-6 text-neutral-text">
+        {/* Welcome Banner */}
+        <div className="bg-white border border-[#E4EAF0] rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-sm">
+          <div className="absolute top-0 right-0 h-40 w-40 bg-gradient-to-tr from-brand-blue/5 to-brand-green/5 rounded-full blur-3xl -z-10"></div>
+          <div className="relative z-10 space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight text-neutral-text">Hello, {session?.email}</h1>
+            <p className="text-neutral-secondary text-xs max-w-xl leading-relaxed font-sans">
+              Welcome to your personal loan portal. Transform your financial goals into reality.
+            </p>
+          </div>
+        </div>
+
+        {/* Start Application CTA */}
+        <div className="bg-white border border-[#E4EAF0] rounded-2xl p-8 shadow-sm text-center max-w-2xl mx-auto space-y-6">
+          <div className="mx-auto w-16 h-16 bg-brand-blue/5 rounded-full border border-neutral-border flex items-center justify-center">
+            <TrendingUp className="h-8 w-8 text-brand-blue" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-neutral-text font-sans">No Active Loan Applications</h3>
+            <p className="text-sm text-neutral-secondary max-w-md mx-auto leading-relaxed">
+              You do not have any active or pending loan application. Apply for a new personal loan online with instant bureau eligibility checks and flexible repayment tenures.
+            </p>
+          </div>
+          <button
+            onClick={handleApplyNewLoan}
+            className="w-full sm:w-auto px-8 py-3.5 bg-brand-green hover:bg-brand-dark-green text-white font-semibold text-sm rounded-xl shadow-lg shadow-brand-green/10 inline-flex items-center justify-center gap-2 group transition duration-200 cursor-pointer"
+          >
+            <span>Apply for a Personal Loan</span>
+            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Visual Helper for timeline steps
   const getStatusStepIndex = (status: string) => {
@@ -103,10 +157,21 @@ export default function Dashboard() {
     return steps.indexOf(status);
   };
 
-  const currentStepIndex = getStatusStepIndex(app.status);
+  const currentStepIndex = app.status ? getStatusStepIndex(app.status) : 0;
 
   // Return formatted status card and action route
   const renderStatusCard = () => {
+    if (!app.status) {
+      return {
+        title: 'Status Unknown',
+        desc: 'Please contact support.',
+        actionText: null,
+        actionUrl: null,
+        actionHandler: null,
+        icon: <AlertCircle className="h-6 w-6 text-neutral-secondary" />
+      };
+    }
+
     switch (app.status) {
       case 'EMAIL_VERIFICATION':
         return {
@@ -114,6 +179,7 @@ export default function Dashboard() {
           desc: 'Verify your email address using an OTP token to secure your credentials.',
           actionText: 'Verify Email',
           actionUrl: '/verify/email',
+          actionHandler: null,
           icon: <MailIcon className="h-6 w-6 text-brand-blue" />
         };
       case 'PHONE_VERIFICATION':
@@ -122,6 +188,7 @@ export default function Dashboard() {
           desc: 'Verify your phone number using a SMS OTP token to complete authentication.',
           actionText: 'Verify Mobile',
           actionUrl: '/verify/phone',
+          actionHandler: null,
           icon: <PhoneIcon className="h-6 w-6 text-brand-blue" />
         };
       case 'KYC_PENDING':
@@ -130,6 +197,7 @@ export default function Dashboard() {
           desc: 'Provide your name, date of birth, ID card type/number, and upload your ID verification file.',
           actionText: 'Start KYC Uploads',
           actionUrl: '/apply/kyc',
+          actionHandler: null,
           icon: <UserCheck className="h-6 w-6 text-brand-blue" />
         };
       case 'KYC_COMPLETED':
@@ -139,6 +207,7 @@ export default function Dashboard() {
           desc: 'Declare your monthly salary and employer coordinates to compute credit eligibility scores.',
           actionText: 'Submit Financial Details',
           actionUrl: '/apply/financials',
+          actionHandler: null,
           icon: <TrendingUp className="h-6 w-6 text-brand-blue" />
         };
       case 'ELIGIBLE':
@@ -149,6 +218,7 @@ export default function Dashboard() {
           desc: 'Choose your desired loan principal limit and pick a repayment tenure (12, 24, or 36 months).',
           actionText: 'Choose Loan Terms',
           actionUrl: '/apply/terms',
+          actionHandler: null,
           icon: <Percent className="h-6 w-6 text-brand-blue" />
         };
       case 'BANK_PENDING':
@@ -157,6 +227,7 @@ export default function Dashboard() {
           desc: 'Provide your active bank account number and branch IFSC code to receive disbursement transfers.',
           actionText: 'Add Bank Details',
           actionUrl: '/apply/bank',
+          actionHandler: null,
           icon: <Banknote className="h-6 w-6 text-brand-blue" />
         };
       case 'DECLARATION_PENDING':
@@ -165,6 +236,7 @@ export default function Dashboard() {
           desc: 'Acknowledge privacy terms, lending conditions, and credit bureau report consent sign-offs.',
           actionText: 'Sign Declarations',
           actionUrl: '/apply/declarations',
+          actionHandler: null,
           icon: <FileCheck className="h-6 w-6 text-brand-blue" />
         };
       case 'SELFIE_PENDING':
@@ -173,6 +245,7 @@ export default function Dashboard() {
           desc: 'Upload or capture a live webcam selfie to verify your face matches your uploaded KYC photo ID.',
           actionText: 'Submit Selfie Verification',
           actionUrl: '/apply/selfie',
+          actionHandler: null,
           icon: <UserCheck className="h-6 w-6 text-brand-blue" />
         };
       case 'SELFIE_UNDER_REVIEW':
@@ -181,6 +254,7 @@ export default function Dashboard() {
           desc: 'Your uploaded selfie and KYC document verification details are currently undergoing manual review by our audit team. Please check back later.',
           actionText: null,
           actionUrl: null,
+          actionHandler: null,
           icon: <Loader2 className="h-6 w-6 text-amber-500 animate-spin" />
         };
       case 'APPROVED':
@@ -190,14 +264,16 @@ export default function Dashboard() {
           desc: 'Congratulations! Your loan is officially approved. Our payments team is processing the disbursement directly to your bank account.',
           actionText: null,
           actionUrl: null,
+          actionHandler: null,
           icon: <CheckCircle2 className="h-6 w-6 text-brand-green" />
         };
       case 'DISBURSED':
         return {
           title: 'Loan Active & Disbursed',
           desc: 'Your loan principal has been successfully transferred to your bank account. Monthly repayments and EMI updates will be rendered here shortly.',
-          actionText: null,
+          actionText: 'Apply for another Loan',
           actionUrl: null,
+          actionHandler: handleApplyNewLoan,
           icon: <CheckCircle2 className="h-6 w-6 text-brand-green" />
         };
       case 'REJECTED':
@@ -206,8 +282,9 @@ export default function Dashboard() {
         return {
           title: 'Application Rejected',
           desc: 'We regret to inform you that your application did not meet our credit underwriting parameters at this time. Please contact support for options.',
-          actionText: null,
+          actionText: 'Apply for another Loan',
           actionUrl: null,
+          actionHandler: handleApplyNewLoan,
           icon: <XCircle className="h-6 w-6 text-rose-500" />
         };
       default:
@@ -216,6 +293,7 @@ export default function Dashboard() {
           desc: 'Please contact customer support to resolve your application status.',
           actionText: null,
           actionUrl: null,
+          actionHandler: null,
           icon: <AlertCircle className="h-6 w-6 text-neutral-secondary" />
         };
     }
@@ -251,9 +329,15 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {card.actionText && card.actionUrl && (
+        {card.actionText && (card.actionUrl || card.actionHandler) && (
           <button
-            onClick={() => router.push(card.actionUrl!)}
+            onClick={() => {
+              if (card.actionUrl) {
+                router.push(card.actionUrl);
+              } else if (card.actionHandler) {
+                card.actionHandler();
+              }
+            }}
             className="w-full md:w-auto px-6 py-2.5 bg-brand-green hover:bg-brand-dark-green text-white font-semibold text-xs rounded-xl shadow-lg shadow-brand-green/10 flex items-center justify-center gap-1.5 shrink-0 transition group cursor-pointer"
           >
             <span>{card.actionText}</span>

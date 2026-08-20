@@ -25,4 +25,21 @@ public class LoanApplicationController {
         response.put("status", application.getStatus().name());
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/latest")
+    public ResponseEntity<Map<String, Object>> getLatestApplication(Principal principal) {
+        return loanApplicationService.getLatestApplication(principal.getName())
+                .map(app -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("hasApplication", true);
+                    response.put("applicationId", app.getId());
+                    response.put("status", app.getStatus().name());
+                    return ResponseEntity.ok(response);
+                })
+                .orElseGet(() -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("hasApplication", false);
+                    return ResponseEntity.ok(response);
+                });
+    }
 }
