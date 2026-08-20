@@ -1,5 +1,11 @@
 # EZFINANZ Personal Loan System
 
+**GitHub Repository**: [https://github.com/lakshman-1289/Personal-Loan-System](https://github.com/lakshman-1289/Personal-Loan-System)
+
+**Detailed Development History & Architecture**: See [MyBuildingWorkflow.md](MyBuildingWorkflow.md).
+
+---
+
 I am building a **Personal Loan Application System** using **Spring Boot and React**.
 
 The goal of this project is to build a complete online loan application process where a customer can apply for a personal loan and an admin can review, approve, reject, and process the application.
