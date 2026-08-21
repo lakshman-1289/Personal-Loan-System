@@ -150,18 +150,18 @@ public class LoanTermsServiceImpl implements LoanTermsService {
     }
 
     private LoanTermsOptionResponse calculateLoanTermsOption(BigDecimal principal, BigDecimal annualRate, int tenure) {
-        double P = principal.doubleValue();
-        double rate = annualRate.doubleValue();
-        double r = rate / 12 / 100;
+        BigDecimal r = annualRate.divide(BigDecimal.valueOf(1200), 10, RoundingMode.HALF_UP);
+        BigDecimal emi;
 
-        double emiVal;
-        if (r == 0) {
-            emiVal = P / tenure;
+        if (r.compareTo(BigDecimal.ZERO) == 0) {
+            emi = principal.divide(BigDecimal.valueOf(tenure), 2, RoundingMode.HALF_UP);
         } else {
-            emiVal = (P * r * Math.pow(1 + r, tenure)) / (Math.pow(1 + r, tenure) - 1);
+            BigDecimal base = BigDecimal.ONE.add(r);
+            BigDecimal basePow = base.pow(tenure);
+            BigDecimal numerator = principal.multiply(r).multiply(basePow);
+            BigDecimal denominator = basePow.subtract(BigDecimal.ONE);
+            emi = numerator.divide(denominator, 2, RoundingMode.HALF_UP);
         }
-
-        BigDecimal emi = BigDecimal.valueOf(emiVal).setScale(2, RoundingMode.HALF_UP);
 
         BigDecimal processingFee = principal.multiply(processingFeePct).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
         BigDecimal gst = processingFee.multiply(gstPct).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
