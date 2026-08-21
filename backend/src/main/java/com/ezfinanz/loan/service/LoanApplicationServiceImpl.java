@@ -5,12 +5,23 @@ import com.ezfinanz.common.entities.User;
 import com.ezfinanz.common.enums.ApplicationStatus;
 import com.ezfinanz.customer.repository.UserRepository;
 import com.ezfinanz.loan.repository.LoanApplicationRepository;
+import com.ezfinanz.kyc.entity.KycDetails;
+import com.ezfinanz.kyc.repository.KycDetailsRepository;
+import com.ezfinanz.loan.entity.FinancialDetails;
+import com.ezfinanz.loan.entity.LoanTerms;
+import com.ezfinanz.loan.repository.FinancialDetailsRepository;
+import com.ezfinanz.loan.repository.LoanTermsRepository;
+import com.ezfinanz.loan.dto.AdminApplicationSummary;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +30,9 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     private final LoanApplicationRepository loanApplicationRepository;
     private final UserRepository userRepository;
+    private final KycDetailsRepository kycDetailsRepository;
+    private final FinancialDetailsRepository financialDetailsRepository;
+    private final LoanTermsRepository loanTermsRepository;
 
     @Override
     @Transactional
@@ -86,6 +100,46 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + email));
         return loanApplicationRepository.findFirstByUserOrderByCreatedAtDesc(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AdminApplicationSummary> getUserApplications(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + email));
+
+        List<LoanApplication> applications = loanApplicationRepository.findByUser(user);
+
+        // Map and sort latest first
+        return applications.stream()
+                .map(app -> {
+                    String applicantName = kycDetailsRepository.findByApplication(app)
+                            .map(KycDetails::getFullName)
+                            .orElse(app.getUser().getEmail());
+
+                    BigDecimal requestedAmount = loanTermsRepository.findByApplication(app)
+                            .map(LoanTerms::getPrincipal)
+                            .orElseGet(() -> financialDetailsRepository.findByApplication(app)
+                                    .map(FinancialDetails::getRequestedAmount)
+                                    .orElse(BigDecimal.ZERO));
+
+                    Integer tenureMonths = loanTermsRepository.findByApplication(app)
+                            .map(LoanTerms::getTenureMonths)
+                            .orElse(null);
+
+                    LocalDateTime submittedAt = app.getSubmittedAt() != null ? app.getSubmittedAt() : app.getCreatedAt();
+
+                    return AdminApplicationSummary.builder()
+                            .applicationId(app.getId())
+                            .applicantName(applicantName)
+                            .requestedAmount(requestedAmount)
+                            .tenureMonths(tenureMonths)
+                            .status(app.getStatus())
+                            .submittedAt(submittedAt)
+                            .build();
+                })
+                .sorted((a, b) -> b.getSubmittedAt().compareTo(a.getSubmittedAt()))
+                .collect(Collectors.toList());
     }
 
     private boolean isTerminalState(ApplicationStatus status) {

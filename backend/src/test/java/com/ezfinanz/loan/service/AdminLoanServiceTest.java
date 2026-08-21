@@ -166,7 +166,7 @@ class AdminLoanServiceTest {
 
     @Test
     void reviewSelfie_Approve_Success() {
-        SelfieReviewRequest request = new SelfieReviewRequest("APPROVED", "Photo is clear");
+        SelfieReviewRequest request = new SelfieReviewRequest("APPROVED", "Looks good");
 
         when(userRepository.findByEmail("admin@example.com")).thenReturn(Optional.of(mockAdmin));
         when(loanApplicationRepository.findById(1L)).thenReturn(Optional.of(mockApplication));
@@ -177,8 +177,8 @@ class AdminLoanServiceTest {
 
         assertNotNull(result);
         assertEquals("APPROVED", result.getStatus());
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockAdmin, ApplicationStatus.SELFIE_UNDER_REVIEW, ApplicationStatus.SELFIE_APPROVED);
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockAdmin, ApplicationStatus.SELFIE_APPROVED, ApplicationStatus.APPROVED);
+        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_UNDER_REVIEW, ApplicationStatus.SELFIE_APPROVED);
+        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_APPROVED, ApplicationStatus.APPROVED);
     }
 
     @Test
@@ -194,8 +194,8 @@ class AdminLoanServiceTest {
 
         assertNotNull(result);
         assertEquals("REJECTED", result.getStatus());
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockAdmin, ApplicationStatus.SELFIE_UNDER_REVIEW, ApplicationStatus.SELFIE_REJECTED);
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockAdmin, ApplicationStatus.SELFIE_REJECTED, ApplicationStatus.REJECTED);
+        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_UNDER_REVIEW, ApplicationStatus.SELFIE_REJECTED);
+        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.SELFIE_REJECTED, ApplicationStatus.REJECTED);
     }
 
     @Test
@@ -210,8 +210,8 @@ class AdminLoanServiceTest {
         LoanApplication result = adminLoanService.disburseLoan(1L, "admin@example.com");
 
         assertNotNull(result);
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockAdmin, ApplicationStatus.APPROVED, ApplicationStatus.DISBURSEMENT_PENDING);
-        verify(loanApplicationService, times(1)).updateApplicationStatus(mockAdmin, ApplicationStatus.DISBURSEMENT_PENDING, ApplicationStatus.DISBURSED);
+        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.APPROVED, ApplicationStatus.DISBURSEMENT_PENDING);
+        verify(loanApplicationService, times(1)).updateApplicationStatus(mockUser, ApplicationStatus.DISBURSEMENT_PENDING, ApplicationStatus.DISBURSED);
         verify(repaymentInstallmentRepository, times(1)).saveAll(anyList());
     }
 

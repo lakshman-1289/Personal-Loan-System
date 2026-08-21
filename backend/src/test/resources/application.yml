@@ -9,7 +9,28 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:mock-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:mock-client-secret}
+            scope:
+              - email
+              - profile
+  mail:
+    host: localhost
+    port: 25
+    username: test@example.com
+    password: test
 
 jwt:
   secret: dGhlLXF1aWNrLWJyb3duLWZveC1qdW1wcy1vdmVyLXRoZS1sYXp5LWRvZy1hbmQtc29tZS1tb3JlLXJhbmRvbS1jaGFyYWN0ZXJzLXNlY3JldC1rZXk=
   expiration: 3600000
+
+twilio:
+  account-sid: mock_sid
+  api-key: mock_key
+  api-secret: mock_secret
+  from-number: mock_number
