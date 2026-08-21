@@ -42,7 +42,7 @@ server:
 jwt:
   # Base64 encoded secret key (min 256 bits / 32 bytes). 
   # This matches a secure signature requirement for HMAC-SHA256.
-  secret: ${JWT_SECRET:dGhlLXF1aWNrLWJyb3duLWZveC1qdW1wcy1vdmVyLXRoZS1sYXp5LWRvZy1hbmQtc29tZS1tb3JlLXJhbmRvbS1jaGFyYWN0ZXJzLXNlY3JldC1rZXk=}
+  secret: ${JWT_SECRET}
   expiration: 86400000 # 24 hours in milliseconds
 
 app:
